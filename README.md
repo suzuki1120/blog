@@ -40,14 +40,14 @@ ogImage: /images/xx.png  # 任意。未指定ならタイトル入りの画像�
 | 項目 | 場所 |
 | --- | --- |
 | サイト名・説明・著者・1 ページの件数 | `src/config/site.ts` |
-| 本番 URL（canonical / OGP / RSS / sitemap に使用） | 環境変数 `NEXT_PUBLIC_SITE_URL`（ビルド時に必要） |
+| 本番 URL（canonical / OGP / RSS / sitemap に使用） | `src/config/site.ts` の既定値（`https://blog.kiraides.workers.dev`）。環境変数 `NEXT_PUBLIC_SITE_URL` で上書きできます |
 | Worker 名・互換性設定 | `wrangler.jsonc` |
 
 ## デプロイ
 
 ```bash
 npx wrangler login                                          # 初回のみ
-NEXT_PUBLIC_SITE_URL=https://example.com npm run deploy
+npm run deploy
 ```
 
 ### Cloudflare Workers Builds（Git 連携による自動デプロイ）
@@ -60,7 +60,7 @@ NEXT_PUBLIC_SITE_URL=https://example.com npm run deploy
 | ビルドコマンド | `npm run cf:build` |
 | デプロイコマンド | `npx opennextjs-cloudflare deploy` |
 | ビルド変数 `SKIP_DEPENDENCY_INSTALL` | `true` |
-| ビルド変数 `NEXT_PUBLIC_SITE_URL` | 本番 URL |
+| ビルド変数 `NEXT_PUBLIC_SITE_URL` | 独自ドメインに移行する場合のみ設定 |
 
 ## 注意点
 
