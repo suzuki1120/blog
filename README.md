@@ -50,6 +50,18 @@ npx wrangler login                                          # 初回のみ
 NEXT_PUBLIC_SITE_URL=https://example.com npm run deploy
 ```
 
+### Cloudflare Workers Builds（Git 連携による自動デプロイ）
+
+`main` への push で自動的にビルド・デプロイされます。Workers Builds の npm は 10.9.2 固定で変更できないため、
+自動インストールを止め、ビルドコマンド内で npm 11 を使ってインストールしています。
+
+| 設定項目（Settings > Build） | 値 |
+| --- | --- |
+| ビルドコマンド | `npm run cf:build` |
+| デプロイコマンド | `npx opennextjs-cloudflare deploy` |
+| ビルド変数 `SKIP_DEPENDENCY_INSTALL` | `true` |
+| ビルド変数 `NEXT_PUBLIC_SITE_URL` | 本番 URL |
+
 ## 注意点
 
 - Next.js は `16.3.8` に固定しています。16.4.0 は `@opennextjs/cloudflare@1.20.9` と組み合わせると、
