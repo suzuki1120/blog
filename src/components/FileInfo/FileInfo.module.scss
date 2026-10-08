@@ -1,0 +1,51 @@
+@use "../../styles/mixins" as *;
+
+.window {
+  @include win-window;
+  max-width: 480px;
+}
+
+.titlebar {
+  @include win-titlebar;
+}
+
+.title {
+  @include win-title-text;
+}
+
+.controls {
+  @include win-controls;
+}
+
+.props {
+  display: grid;
+  gap: 3px;
+  padding: 10px 10px 8px;
+
+  > div {
+    display: grid;
+    grid-template-columns: 5.5em minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  dd {
+    overflow-wrap: anywhere;
+  }
+
+  a,
+  a:visited {
+    color: var(--win-title);
+  }
+
+  a:hover {
+    color: var(--win-error);
+  }
+
+  a:focus-visible {
+    outline: 1px dotted var(--win-ink);
+  }
+}
+
+.mono {
+  font-family: var(--font-mono);
+}

@@ -1,0 +1,70 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.menu {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.box {
+  @include ug-box;
+}
+
+.heading {
+  @include ug-box-heading;
+}
+
+.links {
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-pixel);
+
+  li {
+    white-space: nowrap;
+  }
+
+  li::before {
+    content: "▶ ";
+    color: var(--color-red);
+  }
+
+  // スマートフォンでは横並びにして一覧を早く見せる
+  @include below($bp-sm) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 16px;
+  }
+}
+
+.folderList {
+  display: grid;
+  gap: 2px;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    white-space: nowrap;
+  }
+}
+
+.folderIcon {
+  @include folder-icon;
+}
+
+.count {
+  color: var(--color-ink-2);
+  font-size: 12px;
+}
+
+// スマートフォンでは種類・タグを省く（フォルダ一覧ページから辿れる）
+.folders {
+  @include below($bp-sm) {
+    display: none;
+  }
+}

@@ -5,5 +5,5 @@ export const siteConfig = {
   locale: "ja_JP",
   // 独自ドメインに移行する場合は NEXT_PUBLIC_SITE_URL で上書きする
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog.kiraides.workers.dev").replace(/\/$/, ""),
-  postsPerPage: 10,
+  postsPerPage: 30,
 } as const;

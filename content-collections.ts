@@ -32,7 +32,8 @@ const posts = defineCollection({
         [
           rehypePrettyCode,
           {
-            theme: { light: "github-light", dark: "github-dark-dimmed" },
+            // 黒地のデザインに合わせ、暗いテーマだけを使う
+            theme: "github-dark-dimmed",
             keepBackground: false,
             defaultLang: "plaintext",
           },
@@ -48,6 +49,8 @@ const posts = defineCollection({
       slug: document._meta.path,
       mdx,
       readingMinutes: Math.max(1, Math.round(charCount / 500)),
+      // 本文（frontmatter を除く）の UTF-8 バイト数。ファイル一覧のサイズ列に使う
+      byteSize: new TextEncoder().encode(document.content).length,
     };
   },
 });

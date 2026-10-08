@@ -1,0 +1,238 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.window {
+  @include win-window;
+}
+
+.titlebar {
+  @include win-titlebar;
+}
+
+.title {
+  @include win-title-text;
+}
+
+.icon {
+  @include folder-icon;
+}
+
+.controls {
+  @include win-controls;
+}
+
+// ---- 検索欄 ----
+.search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 6px 4px 4px;
+}
+
+.label {
+  flex-shrink: 0;
+}
+
+.field {
+  @include win-sunken;
+  flex: 1;
+  min-width: 0;
+  padding: 3px 6px;
+  border: 0;
+  border-radius: 0;
+  background: var(--win-field);
+  color: var(--win-ink);
+  font-family: var(--font-ui);
+  font-size: 12px;
+
+  &::placeholder {
+    color: var(--win-ink-2);
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--win-field);
+  }
+
+  &:focus-visible {
+    outline: 1px dotted var(--win-ink);
+    outline-offset: -4px;
+  }
+
+  // JS が動く前（使えない間）は Win98 の無効な入力欄の色
+  &:disabled {
+    background: var(--win-face);
+    cursor: default;
+  }
+}
+
+// ---- 一覧の表 ----
+.list {
+  @include win-sunken;
+  margin: 2px 4px;
+  padding: 2px;
+  background: var(--win-field);
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    @include win-raised;
+    padding: 2px 6px;
+    font-weight: 400;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 2px 6px;
+    vertical-align: top;
+  }
+
+  tbody tr {
+    position: relative;
+  }
+
+  // 行全体をクリックできるようにし、ホバー・フォーカス時は Windows の選択行の色にする
+  tbody tr:hover,
+  tbody tr:focus-within {
+    background: var(--win-select);
+    color: var(--win-on-select);
+
+    a,
+    a:visited {
+      color: var(--win-on-select);
+    }
+  }
+}
+
+.name {
+  overflow-wrap: anywhere;
+
+  a {
+    text-decoration: none;
+
+    &,
+    &:visited {
+      color: var(--win-ink);
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+    }
+
+    &:focus-visible {
+      outline: 1px dotted var(--win-on-select);
+      outline-offset: 0;
+    }
+  }
+}
+
+// 書類アイコン（右上を折った白い紙）
+.fileIcon {
+  display: inline-block;
+  width: 10px;
+  height: 12px;
+  margin-right: 6px;
+  border: 1px solid var(--win-shadow);
+  background: linear-gradient(225deg, var(--win-face) 3px, var(--win-field) 3px);
+  vertical-align: -1px;
+}
+
+.size,
+.hash,
+.date {
+  white-space: nowrap;
+}
+
+.size {
+  text-align: right;
+}
+
+.hash {
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+// 狭い画面ではサイズと ID の列を省く
+@include below($bp-sm) {
+  .size,
+  .hash {
+    display: none;
+  }
+}
+
+.new {
+  margin-left: 6px;
+  color: var(--win-new);
+  font-family: var(--font-pixel);
+  font-size: 11px;
+
+  @include ug-blink;
+}
+
+.draft {
+  margin-left: 6px;
+  padding-inline: 4px;
+  border: 1px solid currentColor;
+  font-size: 10px;
+}
+
+.empty {
+  padding: 12px;
+}
+
+// ---- ステータスバー ----
+.status {
+  display: flex;
+  gap: 2px;
+  margin-top: 2px;
+
+  > span {
+    @include win-sunken;
+    padding: 1px 6px;
+    white-space: nowrap;
+  }
+
+  > span:first-child {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.statusError {
+  color: var(--win-error);
+}
+
+// ---- ページ送り ----
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 12px;
+  padding: 8px 4px 5px;
+}
+
+.button {
+  @include win-button;
+}
+
+.disabled {
+  color: var(--win-shadow);
+  text-shadow: 1px 1px 0 var(--win-light);
+
+  &:hover {
+    color: var(--win-shadow);
+  }
+}
+
+.pageInfo {
+  white-space: nowrap;
+}

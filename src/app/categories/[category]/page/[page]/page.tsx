@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ListPage } from "@/components/ListPage/ListPage";
+import { FileWindow } from "@/components/FileWindow/FileWindow";
 import { categories } from "@/config/taxonomy";
+import { fileWindowProps } from "@/lib/files";
 import { alternates } from "@/lib/metadata";
 import {
   getPageParams,
   getPostsByCategory,
   getUsedCategories,
   isCategorySlug,
-  paginate,
   parsePageParam,
 } from "@/lib/posts";
 
@@ -35,14 +35,8 @@ export default async function CategoryPagedPage({ params }: Props) {
   const { category, page: pageParam } = await params;
   if (!isCategorySlug(category)) notFound();
   const posts = getPostsByCategory(category);
-  const page = paginate(posts, parsePageParam(pageParam) ?? NaN);
-  if (!page || page.currentPage === 1) notFound();
-  return (
-    <ListPage
-      title={`カテゴリ: ${categories[category]}`}
-      lead={`${posts.length}件の記事（${page.currentPage} / ${page.totalPages} ページ）`}
-      page={page}
-      basePath={`/categories/${category}`}
-    />
-  );
+  const page = parsePageParam(pageParam) ?? NaN;
+  const props = fileWindowProps(posts, page, `/categories/${category}`, `検索結果: 種類=${categories[category]}`);
+  if (!props || page === 1) notFound();
+  return <FileWindow {...props} />;
 }

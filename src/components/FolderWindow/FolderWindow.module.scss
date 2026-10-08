@@ -1,0 +1,100 @@
+@use "../../styles/mixins" as *;
+
+.window {
+  @include win-window;
+}
+
+.titlebar {
+  @include win-titlebar;
+}
+
+.title {
+  @include win-title-text;
+}
+
+.icon {
+  @include folder-icon;
+}
+
+.controls {
+  @include win-controls;
+}
+
+.pane {
+  @include win-sunken;
+  display: grid;
+  gap: 14px;
+  margin: 4px;
+  padding: 10px 8px 12px;
+  background: var(--win-field);
+}
+
+.heading {
+  margin-bottom: 6px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--win-shadow);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+
+// アイコンと名前を縦に並べ、選択時は名前だけを紺色にする（エクスプローラーの大きいアイコン表示）
+.folder {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 4px 2px;
+  text-align: center;
+  text-decoration: none;
+
+  &,
+  &:visited {
+    color: var(--win-ink);
+  }
+
+  &:hover .name,
+  &:focus-visible .name {
+    background: var(--win-select);
+    color: var(--win-on-select);
+  }
+
+  &:focus-visible {
+    outline: 1px dotted var(--win-ink);
+    outline-offset: 0;
+  }
+}
+
+.bigIcon {
+  @include folder-icon(32px, 24px);
+  border-top-width: 6px;
+}
+
+.name {
+  max-width: 100%;
+  padding-inline: 2px;
+  overflow-wrap: anywhere;
+}
+
+.count {
+  color: var(--win-ink-2);
+  font-size: 11px;
+}
+
+.status {
+  display: flex;
+  margin-top: 2px;
+
+  > span {
+    @include win-sunken;
+    flex: 1;
+    padding: 1px 6px;
+  }
+}

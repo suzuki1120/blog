@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { FileInfo } from "@/components/FileInfo/FileInfo";
 import { MdxContent } from "@/components/MdxContent/MdxContent";
-import { TagList } from "@/components/TagList/TagList";
 import { siteConfig } from "@/config/site";
-import { categories } from "@/config/taxonomy";
-import { formatDate } from "@/lib/format";
 import { alternates } from "@/lib/metadata";
 import { getAdjacentPosts, getAllPosts, getPostBySlug } from "@/lib/posts";
 import styles from "./page.module.scss";
@@ -51,50 +49,34 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <article className={styles.article}>
-      <header className={styles.header}>
-        <p className={styles.date}>
-          <time dateTime={post.date}>{formatDate(post.date)}</time>
-        </p>
-        <h1 className={styles.title}>
-          <span aria-hidden="true">▼</span>
-          {post.title}
-        </h1>
-        <ul className={styles.meta}>
-          <li>
-            カテゴリ: <Link href={`/categories/${post.category}`}>{categories[post.category]}</Link>
-          </li>
-          {post.tags.length > 0 && (
-            <li>
-              タグ: <TagList tags={post.tags} />
-            </li>
-          )}
-          {post.updated && (
-            <li>
-              更新: <time dateTime={post.updated}>{formatDate(post.updated)}</time>
-            </li>
-          )}
-          <li>約{post.readingMinutes}分で読めます</li>
-        </ul>
-      </header>
+      <FileInfo post={post} />
 
-      <MdxContent code={post.mdx} />
+      <h1 className={styles.title}>
+        <span aria-hidden="true">■ </span>
+        {post.title}
+      </h1>
+      <p className={styles.description}>{post.description}</p>
+
+      <div className={styles.body}>
+        <MdxContent code={post.mdx} />
+      </div>
 
       <nav aria-label="前後の記事" className={styles.adjacent}>
         <ul>
           {older && (
             <li>
               <Link href={`/posts/${older.slug}`} rel="prev" title={older.title}>
-                « 前の記事
+                &lt;&lt; 前のファイル
               </Link>
             </li>
           )}
           <li>
-            <Link href="/">HOME</Link>
+            <Link href="/">ファイル一覧</Link>
           </li>
           {newer && (
             <li>
               <Link href={`/posts/${newer.slug}`} rel="next" title={newer.title}>
-                次の記事 »
+                次のファイル &gt;&gt;
               </Link>
             </li>
           )}

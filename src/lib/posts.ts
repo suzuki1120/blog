@@ -15,6 +15,14 @@ const published = allPosts
   .filter((post) => process.env.NODE_ENV !== "production" || !post.draft)
   .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : a.slug.localeCompare(b.slug)));
 
+// ビルド時点から 14 日以内の記事に「NEW!」を付ける
+const NEW_DAYS = 14;
+const builtAt = Date.now();
+
+export function isNewPost(date: string): boolean {
+  return builtAt - Date.parse(`${date}T00:00:00+09:00`) < NEW_DAYS * 24 * 60 * 60 * 1000;
+}
+
 export function getAllPosts(): Post[] {
   return published;
 }
@@ -74,6 +82,12 @@ export type Paginated<T> = {
 
 export function getTotalPages(count: number): number {
   return Math.max(1, Math.ceil(count / siteConfig.postsPerPage));
+}
+
+/** 1 ページ目の URL（例: "/", "/tags/nextjs"）。2 ページ目以降は `${basePath}/page/N` */
+export function pageHref(basePath: string, page: number): string {
+  const base = basePath === "/" ? "" : basePath;
+  return page === 1 ? basePath : `${base}/page/${page}`;
 }
 
 /** ページ番号は 1 始まり。範囲外なら undefined */

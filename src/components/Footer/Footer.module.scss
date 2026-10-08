@@ -1,76 +1,75 @@
-@use "../../styles/variables" as *;
 @use "../../styles/mixins" as *;
 
 .footer {
-  @include box;
   display: grid;
   justify-items: center;
-  gap: 6px;
-  margin-top: $gutter;
+  gap: 14px;
+  margin-top: 16px;
+  padding: 16px 8px;
+  border-top: 3px double var(--color-neon-dim);
   text-align: center;
 }
 
-.toTop {
-  justify-self: end;
-  font-size: 0.8125rem;
-  white-space: nowrap;
-}
-
-.badges {
+.counters {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 6px;
-  padding: 0;
-  list-style: none;
+  gap: 8px 20px;
+
+  > div {
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+  }
+
+  dt {
+    color: var(--color-ink-2);
+    font-size: 12px;
+  }
 }
 
-// 80×15 の小さなバナーを CSS だけで再現する
-.badge {
-  display: inline-flex;
-  align-items: stretch;
-  height: 15px;
-  padding-right: 3px;
-  border: 1px solid var(--color-ink);
-  background: var(--color-box);
-  color: var(--color-ink);
-  font-family: $font-dot;
-  font-size: 10px;
-  line-height: 13px;
-  text-decoration: none;
+// アクセスカウンター風の数字表示
+.digits {
+  padding: 1px 6px;
+  border: 2px inset var(--color-ink-2);
+  background: var(--color-digit-bg);
+  color: var(--color-red);
+  font-family: var(--font-pixel);
+  font-size: 18px;
+  letter-spacing: 0.18em;
+  line-height: 1.3;
+  text-shadow: 0 0 4px currentColor;
   white-space: nowrap;
+}
 
-  &,
-  &:visited {
-    color: var(--color-ink);
+.notice {
+  width: 100%;
+  max-width: 520px;
+  padding: 8px 12px;
+  border: 1px dashed var(--color-red);
+  font-size: 12px;
+  text-align: left;
+
+  ul {
+    padding-left: 1.2em;
   }
-
-  > span {
-    padding-inline: 3px;
-    margin-right: 3px;
-    color: var(--color-badge-text);
-  }
 }
 
-a.badge:hover {
-  border-color: var(--color-hover);
+.noticeHeading {
+  margin-bottom: 4px;
+  color: var(--color-red);
+  font-size: 14px;
+  text-align: center;
+
+  @include ug-blink;
 }
 
-.rss > span {
-  background: var(--color-badge-rss);
+.toTop {
+  font-family: var(--font-pixel);
+  white-space: nowrap;
 }
 
-.next > span {
-  background: var(--color-badge-next);
-}
-
-.cf > span {
-  background: var(--color-badge-cf);
-}
-
-.copyright,
-.powered {
+.copyright {
   color: var(--color-ink-2);
-  font-size: 0.75rem;
-  overflow-wrap: anywhere;
+  font-size: 11px;
 }

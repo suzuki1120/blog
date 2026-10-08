@@ -1,28 +1,28 @@
 @use "../styles/variables" as *;
 @use "../styles/mixins" as *;
 
-// 当時の固定幅テンプレートに合わせ、全体を 960px の中央寄せにする
 .page {
   width: 100%;
-  max-width: $page-width + $gutter * 2;
+  max-width: $page-width;
   margin-inline: auto;
   padding: $gutter;
 }
 
-.columns {
+// 左にメニュー、右に本文（旧フレームサイト風）
+.frame {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: $gutter;
   margin-top: $gutter;
 
-  @include from($bp-md) {
-    grid-template-columns: minmax(0, 1fr) $sidebar-width;
+  @include from($bp-sm) {
+    grid-template-columns: $menu-width minmax(0, 1fr);
     align-items: start;
   }
 }
 
 .main {
   display: grid;
-  gap: $gutter;
+  gap: 16px;
   min-width: 0;
 }

@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { ListPage } from "@/components/ListPage/ListPage";
+import { FileWindow } from "@/components/FileWindow/FileWindow";
 import { alternates } from "@/lib/metadata";
-import { getAllPosts, paginate } from "@/lib/posts";
+import { fileWindowProps } from "@/lib/files";
+import { getAllPosts } from "@/lib/posts";
 
 export const metadata: Metadata = {
   alternates: alternates("/"),
 };
 
 export default function Home() {
-  const page = paginate(getAllPosts(), 1)!;
-  return <ListPage page={page} basePath="/" />;
+  return <FileWindow {...fileWindowProps(getAllPosts(), 1, "/")!} />;
 }

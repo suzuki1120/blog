@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
-import { DotGothic16, Kosugi_Maru } from "next/font/google";
+import { DotGothic16 } from "next/font/google";
 import { Footer } from "@/components/Footer/Footer";
 import { Header } from "@/components/Header/Header";
-import { Sidebar } from "@/components/Sidebar/Sidebar";
+import { Menu } from "@/components/Menu/Menu";
 import { siteConfig } from "@/config/site";
 import { alternates } from "@/lib/metadata";
 import styles from "./layout.module.scss";
 import "./globals.scss";
 
 // 日本語フォントはサブセット指定ができないため preload しない
-const displayFont = Kosugi_Maru({ weight: "400", preload: false, variable: "--font-display" });
 const dotFont = DotGothic16({ weight: "400", preload: false, variable: "--font-dot" });
 
 export const metadata: Metadata = {
@@ -33,18 +32,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ja" className={`${displayFont.variable} ${dotFont.variable}`}>
+    <html lang="ja" className={dotFont.variable}>
       <body id="top">
         <a href="#main" className="skip-link">
           本文へスキップ
         </a>
         <div className={styles.page}>
           <Header />
-          <div className={styles.columns}>
+          <div className={styles.frame}>
+            <Menu />
             <main id="main" className={styles.main}>
               {children}
             </main>
-            <Sidebar />
           </div>
           <Footer />
         </div>

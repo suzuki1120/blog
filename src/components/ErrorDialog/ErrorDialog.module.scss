@@ -1,0 +1,66 @@
+@use "../../styles/mixins" as *;
+
+.dialog {
+  @include win-window;
+  justify-self: center;
+  width: 100%;
+  max-width: 400px;
+  margin-block: 24px;
+}
+
+.titlebar {
+  @include win-titlebar;
+}
+
+.title {
+  @include win-title-text;
+}
+
+.controls {
+  @include win-controls;
+}
+
+.body {
+  display: flex;
+  gap: 14px;
+  padding: 16px 14px 8px;
+}
+
+// 赤い丸に白い ×（Win98 のエラーアイコン）
+.icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--win-dark);
+  border-radius: 50%;
+  background: var(--win-error);
+  color: var(--win-light);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.message {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.heading {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0 10px;
+}
+
+.button {
+  @include win-button;
+}

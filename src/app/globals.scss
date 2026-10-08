@@ -1,50 +1,66 @@
-/* Hallmark · route: custom (bespoke) · structure: 2005 年頃の国産ブログサービス（日付帯の記事箱 + 右サイドバー）
- * idea: "無料テンプレートのチープさ" · paper: oklch(95% 0.03 220) gingham · accent: oklch(62% 0.17 0)
- * display: Kosugi Maru · body: Verdana / Hiragino / Meiryo · outlier: DotGothic16
- * axes: light / rounded-sans / chromatic-pink · design-system: design.md · designed-as-app
+/* Hallmark · route: custom (bespoke) · structure: 90 年代 Warez サイトの外枠（ASCII ロゴ + 左フレーム風メニュー）
+ *   + WinMX / Winny 風の検索結果ウィンドウ（記事一覧）
+ * idea: "深夜のアングラサイト" · paper: oklch(13% 0 0) starfield · accent: oklch(86% 0.26 142) neon green
+ * display: DotGothic16 · body: MS PGothic / Osaka · ui: Tahoma / MS UI Gothic · logo: figlet ASCII
+ * axes: dark / mono-dot / chromatic-green · design-system: design.md
+ * exception: gate 47（UI クロームの再現禁止）— Win98 ウィンドウ枠はデザインの主題なので意図的に描く
  */
 @use "../styles/variables" as *;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
-  // 背景（水色のギンガムチェック）
-  --color-paper: oklch(95% 0.03 220);
-  --color-paper-check: oklch(88% 0.05 220 / 0.45);
-
-  // 箱
-  --color-box: oklch(99.5% 0.004 85);
-  --color-box-2: oklch(97% 0.012 85);
-  --color-rule: oklch(80% 0.04 220);
-  --color-rule-pink: oklch(84% 0.06 0);
+  // 背景（黒地に星）
+  --color-paper: oklch(13% 0 0);
+  --color-panel: oklch(17% 0.02 150);
+  --color-star: oklch(75% 0 0 / 0.55);
 
   // 文字
-  --color-ink: oklch(32% 0.02 30);
-  --color-ink-2: oklch(50% 0.02 30);
-  --color-on-pink: oklch(99% 0.005 0);
+  --color-ink: oklch(88% 0 0);
+  --color-ink-2: oklch(70% 0 0);
 
   // アクセント
-  --color-pink: oklch(58% 0.17 0);
-  --color-pink-soft: oklch(94% 0.035 0);
-  --color-new: oklch(56% 0.22 25);
-  --color-header: oklch(90% 0.06 220);
-  --color-header-2: oklch(97% 0.025 220);
+  --color-neon: oklch(86% 0.26 142);
+  --color-neon-dim: oklch(56% 0.16 142);
+  --color-neon-soft: oklch(22% 0.05 142);
+  --color-rule: oklch(42% 0.09 142);
+  --color-red: oklch(64% 0.25 28);
+  --color-yellow: oklch(93% 0.19 105);
+  --color-magenta: oklch(72% 0.27 330);
+  --color-cyan: oklch(88% 0.15 195);
+  --color-digit-bg: oklch(8% 0 0);
 
-  // リンク（青 → 訪問済み紫 → ホバーでオレンジ）
-  --color-link: oklch(46% 0.17 255);
-  --color-visited: oklch(44% 0.15 310);
-  --color-hover: oklch(58% 0.18 45);
-  --color-focus: oklch(55% 0.2 255);
-
-  // バナー
-  --color-badge-rss: oklch(68% 0.18 50);
-  --color-badge-next: oklch(28% 0.01 260);
-  --color-badge-cf: oklch(70% 0.16 60);
-  --color-badge-text: oklch(99% 0 0);
+  // リンク（黄 → 訪問済みマゼンタ → ホバーでシアン）
+  --color-link: var(--color-yellow);
+  --color-visited: var(--color-magenta);
+  --color-hover: var(--color-cyan);
+  --color-focus: var(--color-cyan);
 
   // コード
-  --color-code-bg: oklch(98% 0.006 220);
-  --color-code-highlight: oklch(93% 0.05 90);
+  --color-code-bg: oklch(9% 0 0);
+  --color-code-highlight: oklch(26% 0.07 142);
+
+  // Win98 の部品色（#c0c0c0 / #808080 / #000080 など）
+  --win-face: oklch(80% 0 0);
+  --win-face-light: oklch(90% 0 0);
+  --win-light: oklch(100% 0 0);
+  --win-shadow: oklch(57% 0 0);
+  --win-dark: oklch(0% 0 0);
+  --win-ink: oklch(0% 0 0);
+  --win-ink-2: oklch(40% 0 0);
+  --win-field: oklch(100% 0 0);
+  --win-title: oklch(26% 0.18 264);
+  --win-title-2: oklch(58% 0.14 245);
+  --win-select: oklch(26% 0.18 264);
+  --win-on-select: oklch(100% 0 0);
+  --win-new: oklch(55% 0.24 28);
+  --win-error: oklch(55% 0.22 28);
+
+  // 文字（--font-dot は layout.tsx の next/font が定義する）
+  --font-pixel: var(--font-dot), "Osaka", monospace;
+  --font-body: "MS PGothic", "Osaka", "Hiragino Kaku Gothic ProN", sans-serif;
+  --font-ui: Tahoma, "MS UI Gothic", "Hiragino Kaku Gothic ProN", sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "MS Gothic", monospace;
 }
 
 *,
@@ -67,12 +83,15 @@ body {
   min-height: 100dvh;
   background-color: var(--color-paper);
   background-image:
-    repeating-linear-gradient(0deg, var(--color-paper-check) 0 12px, transparent 12px 24px),
-    repeating-linear-gradient(90deg, var(--color-paper-check) 0 12px, transparent 12px 24px);
+    radial-gradient(1px 1px at 18px 26px, var(--color-star), transparent),
+    radial-gradient(1px 1px at 74px 92px, var(--color-star), transparent),
+    radial-gradient(1px 1px at 131px 41px, var(--color-star), transparent),
+    radial-gradient(1.5px 1.5px at 162px 140px, var(--color-star), transparent);
+  background-size: 180px 180px;
   color: var(--color-ink);
-  font-family: $font-body;
-  font-size: 15px;
-  line-height: 1.8;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.7;
 }
 
 img,
@@ -104,7 +123,7 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: $font-display;
+  font-family: var(--font-pixel);
   font-style: normal;
   font-weight: 400;
 }
@@ -117,7 +136,7 @@ input {
 code,
 pre,
 kbd {
-  font-family: $font-mono;
+  font-family: var(--font-mono);
 }
 
 .visually-hidden {
@@ -135,7 +154,7 @@ kbd {
   left: 8px;
   z-index: 10;
   padding: 4px 12px;
-  background: var(--color-box);
+  background: var(--color-paper);
   transform: translateY(-200%);
 
   &:focus-visible {

@@ -1,7 +1,9 @@
-@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
-// 記事本文。MDX から生成される素の要素を対象にする
+// 記事本文。MDX から生成される素の要素を対象にする。黒地で長文を読むため、文字は少し大きく行間を広めにする
 .body {
+  font-size: 15px;
+  line-height: 1.85;
   overflow-wrap: anywhere;
 
   > * + * {
@@ -18,9 +20,10 @@
   h2 {
     margin-top: 2.25em;
     padding: 0.2em 0.6em;
-    border-left: 6px solid var(--color-pink);
-    border-bottom: 1px dotted var(--color-rule-pink);
-    background: var(--color-pink-soft);
+    border-left: 6px solid var(--color-neon);
+    border-bottom: 1px solid var(--color-rule);
+    background: var(--color-neon-soft);
+    color: var(--color-neon);
     font-size: 1.25rem;
   }
 
@@ -28,12 +31,13 @@
     margin-top: 2em;
     padding-bottom: 0.15em;
     border-bottom: 1px dashed var(--color-rule);
+    color: var(--color-neon);
     font-size: 1.125rem;
 
     &::before {
       content: "■";
       margin-right: 0.3em;
-      color: var(--color-pink);
+      color: var(--color-red);
     }
   }
 
@@ -42,8 +46,8 @@
     font-size: 1rem;
 
     &::before {
-      content: "・";
-      color: var(--color-pink);
+      content: "▶ ";
+      color: var(--color-red);
     }
   }
 
@@ -56,25 +60,30 @@
     }
   }
 
+  ul > li::marker {
+    color: var(--color-neon);
+  }
+
+  strong {
+    color: var(--color-yellow);
+    font-weight: 700;
+  }
+
   blockquote {
     padding: 0.6em 1em;
-    border: 1px dotted var(--color-rule);
-    background: var(--color-box-2);
+    border-left: 4px solid var(--color-neon-dim);
+    background: var(--color-panel);
     color: var(--color-ink-2);
   }
 
   hr {
     margin-block: 2.5em;
     border: 0;
-    border-top: 2px dotted var(--color-rule-pink);
+    border-top: 3px double var(--color-rule);
   }
 
-  // 写真風の白枠
   img {
-    padding: 4px;
     border: 1px solid var(--color-rule);
-    background: var(--color-box);
-    box-shadow: 2px 2px 0 var(--color-rule);
   }
 
   // 表は横にはみ出さないよう、表自体をスクロールさせる
@@ -94,14 +103,17 @@
   }
 
   th {
-    background: var(--color-box-2);
+    background: var(--color-neon-soft);
+    color: var(--color-neon);
+    font-weight: 400;
   }
 
   // インラインコード
   :not(pre) > code {
     padding: 0.15em 0.4em;
-    border-radius: 4px;
+    border: 1px solid var(--color-rule);
     background: var(--color-code-bg);
+    color: var(--color-neon);
     font-size: 0.875em;
   }
 
@@ -115,14 +127,13 @@
     padding: 0.3em 0.9em;
     border: 1px solid var(--color-rule);
     border-bottom: 0;
-    background: var(--color-box-2);
+    background: var(--color-panel);
     color: var(--color-ink-2);
-    font-family: $font-mono;
+    font-family: var(--font-mono);
     font-size: 0.8125rem;
 
     + pre {
       margin-top: 0;
-      border-top-left-radius: 0;
     }
   }
 
@@ -147,12 +158,11 @@
 
   [data-highlighted-line] {
     background: var(--color-code-highlight);
-    box-shadow: inset 3px 0 0 var(--color-pink);
+    box-shadow: inset 3px 0 0 var(--color-neon);
   }
 
   [data-highlighted-chars] {
     padding: 0.1em 0.2em;
-    border-radius: 3px;
     background: var(--color-code-highlight);
   }
 
@@ -170,10 +180,5 @@
       text-align: right;
       opacity: 0.6;
     }
-  }
-
-  // Shiki は二重テーマで出力されるが、ライトテーマの色だけを使う
-  code[data-theme*=" "] span {
-    color: var(--shiki-light);
   }
 }

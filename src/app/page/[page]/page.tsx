@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ListPage } from "@/components/ListPage/ListPage";
+import { FileWindow } from "@/components/FileWindow/FileWindow";
 import { alternates } from "@/lib/metadata";
-import { getAllPosts, getPageParams, paginate, parsePageParam } from "@/lib/posts";
+import { fileWindowProps } from "@/lib/files";
+import { getAllPosts, getPageParams, parsePageParam } from "@/lib/posts";
 
 type Props = { params: Promise<{ page: string }> };
 
@@ -21,7 +22,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
-  const page = paginate(getAllPosts(), parsePageParam((await params).page) ?? NaN);
-  if (!page || page.currentPage === 1) notFound();
-  return <ListPage title="記事一覧" lead={`${page.currentPage} / ${page.totalPages} ページ`} page={page} basePath="/" />;
+  const page = parsePageParam((await params).page) ?? NaN;
+  const props = fileWindowProps(getAllPosts(), page, "/");
+  if (!props || page === 1) notFound();
+  return <FileWindow {...props} />;
 }

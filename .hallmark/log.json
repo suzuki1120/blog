@@ -2,6 +2,16 @@
   {
     "date": "2026-10-08",
     "scope": "app",
+    "macrostructure": "custom (bespoke): Warez サイトの外枠 + WinMX/Winny 風の検索結果ウィンドウ（ページ送り・絞り込み・検索欄）",
+    "theme": "custom",
+    "theme_axes": "dark / mono-dot / chromatic-green",
+    "vibe": "90 年代のアングラサイト、黒地にネオン緑、Win98 の灰色ウィンドウ",
+    "enrichment": "ASCII アートのロゴ（figlet Standard、サイト名から自動生成）",
+    "brief": "2005 年風デザインを廃止し、アングラデザインをサイト全体に採用"
+  },
+  {
+    "date": "2026-10-08",
+    "scope": "app",
     "macrostructure": "custom (bespoke): 国産ブログサービス風 2 カラム",
     "theme": "custom",
     "theme_axes": "light / rounded-sans / chromatic-pink",

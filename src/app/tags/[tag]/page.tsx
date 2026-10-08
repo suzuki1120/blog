@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ListPage } from "@/components/ListPage/ListPage";
+import { FileWindow } from "@/components/FileWindow/FileWindow";
 import { tags } from "@/config/taxonomy";
 import { alternates } from "@/lib/metadata";
-import { getPostsByTag, getUsedTags, isTagSlug, paginate } from "@/lib/posts";
+import { fileWindowProps } from "@/lib/files";
+import { getPostsByTag, getUsedTags, isTagSlug } from "@/lib/posts";
 
 type Props = { params: Promise<{ tag: string }> };
 
@@ -26,9 +27,7 @@ export default async function TagPage({ params }: Props) {
   const { tag } = await params;
   if (!isTagSlug(tag)) notFound();
   const posts = getPostsByTag(tag);
-  const page = paginate(posts, 1);
-  if (!page || posts.length === 0) notFound();
-  return (
-    <ListPage title={`タグ: ${tags[tag]}`} lead={`${posts.length}件の記事`} page={page} basePath={`/tags/${tag}`} />
-  );
+  const props = fileWindowProps(posts, 1, `/tags/${tag}`, `検索結果: タグ=${tags[tag]}`);
+  if (!props || posts.length === 0) notFound();
+  return <FileWindow {...props} />;
 }
