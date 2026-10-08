@@ -62,6 +62,11 @@ npm run deploy
 | ビルド変数 `SKIP_DEPENDENCY_INSTALL` | `true` |
 | ビルド変数 `NEXT_PUBLIC_SITE_URL` | 独自ドメインに移行する場合のみ設定 |
 
+push してもデプロイ一覧にビルドが出ない場合は、次を確認してください。
+
+- 本番ブランチが `main` になっているか、ビルド監視パスで対象外にしていないか（Settings > Build）
+- GitHub の「Cloudflare Workers and Pages」アプリに、このリポジトリへのアクセスを許可しているか
+
 ## 注意点
 
 - Next.js は `16.3.8` に固定しています。16.4.0 は `@opennextjs/cloudflare@1.20.9` と組み合わせると、
