@@ -1,0 +1,21 @@
+@use "variables" as *;
+
+@mixin container($width: $content-width) {
+  width: 100%;
+  max-width: $width + $gutter * 2;
+  margin-inline: auto;
+  padding-inline: $gutter;
+}
+
+@mixin from($bp) {
+  @media (min-width: $bp) {
+    @content;
+  }
+}
+
+@mixin focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}

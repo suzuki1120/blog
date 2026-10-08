@@ -1,0 +1,85 @@
+@use "../styles/variables" as *;
+
+:root {
+  color-scheme: light dark;
+
+  --color-bg: #ffffff;
+  --color-surface: #f6f7f9;
+  --color-text: #1f2328;
+  --color-text-muted: #5b6470;
+  --color-border: #e1e4e8;
+  --color-accent: #0b62d6;
+  --color-accent-soft: #e8f0fc;
+  --color-code-bg: #f6f8fa;
+  --color-code-highlight: rgba(11, 98, 214, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #15181d;
+    --color-surface: #1d2128;
+    --color-text: #e6e8eb;
+    --color-text-muted: #9aa3ad;
+    --color-border: #2e343d;
+    --color-accent: #6aa8ff;
+    --color-accent-soft: #1d2b40;
+    --color-code-bg: #1d2128;
+    --color-code-highlight: rgba(106, 168, 255, 0.1);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: $font-sans;
+  font-size: 16px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--color-accent);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+code,
+pre,
+kbd {
+  font-family: $font-mono;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

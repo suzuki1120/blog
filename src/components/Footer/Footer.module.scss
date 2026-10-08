@@ -1,0 +1,14 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.footer {
+  margin-top: 80px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.inner {
+  @include container($wide-width);
+  padding-block: 24px;
+  text-align: center;
+}

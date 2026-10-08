@@ -1,0 +1,30 @@
+---
+title: CSS 変数だけでダークモードに対応する
+description: JavaScript を使わず、OS の設定に合わせて配色を切り替える最小構成です。
+date: 2026-09-10
+category: tech
+tags: [scss, tips]
+---
+
+OS の設定に合わせるだけであれば、`prefers-color-scheme` メディアクエリと CSS 変数で対応できます。
+
+```scss
+:root {
+  --color-bg: #ffffff;
+  --color-text: #1f2328;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #15181d;
+    --color-text: #e6e8eb;
+  }
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+```
+
+コードブロックの配色も、Shiki のライト用・ダーク用テーマを両方出力し、同じメディアクエリで切り替えています。

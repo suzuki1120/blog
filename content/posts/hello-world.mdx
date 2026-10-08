@@ -1,0 +1,38 @@
+---
+title: ブログを開設しました
+description: Next.js と Cloudflare Workers で個人ブログを作りました。構成と、記事の書き方をまとめます。
+date: 2026-10-08
+category: notes
+tags: [nextjs, cloudflare]
+---
+
+このブログは Next.js（App Router）で作成し、Cloudflare Workers で配信しています。
+
+## 構成
+
+| 項目 | 採用したもの |
+| --- | --- |
+| フレームワーク | Next.js 16 |
+| 配信先 | Cloudflare Workers（OpenNext アダプター） |
+| 記事データ | リポジトリ内の MDX ファイル |
+| スタイル | CSS Modules + SCSS |
+
+記事はすべてビルド時に HTML として生成されるため、閲覧時にサーバー側で重い処理は発生しません。
+
+## 記事の追加方法
+
+`content/posts/` に `.mdx` ファイルを置くと、ファイル名がそのまま URL になります。
+
+```md title="content/posts/my-first-post.mdx"
+---
+title: 記事タイトル
+description: 一覧や SNS 共有時に表示される説明文
+date: 2026-10-08
+category: tech
+tags: [nextjs]
+---
+
+本文を Markdown で書きます。
+```
+
+カテゴリとタグは `src/config/taxonomy.ts` に定義したものだけが使えます。定義にない値を書くとビルドが失敗するので、表記ゆれを防げます。

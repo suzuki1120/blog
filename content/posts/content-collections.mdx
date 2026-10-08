@@ -1,0 +1,19 @@
+---
+title: content-collections で MDX を型付きデータにする
+description: Markdown の frontmatter を zod で検証し、TypeScript から型付きで扱う方法です。
+date: 2026-10-02
+category: tech
+tags: [mdx, typescript, nextjs]
+---
+
+Cloudflare Workers ではリクエスト時にファイルシステムを読めません。そのため、記事はビルド時にデータへ変換しておく必要があります。
+
+`content-collections` を使うと、frontmatter を zod で検証したうえで、通常の `import` で記事一覧を取得できます。
+
+```ts
+import { allPosts } from "content-collections";
+
+const latest = allPosts.toSorted((a, b) => b.date.localeCompare(a.date))[0];
+```
+
+必須項目の漏れや日付の書式ミスはビルド時にエラーになるため、公開後に気付くことがなくなります。

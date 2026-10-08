@@ -1,0 +1,17 @@
+---
+title: wrangler でよく使うコマンド
+description: Cloudflare Workers の開発で日常的に使う wrangler コマンドの一覧です。
+date: 2026-09-24
+category: dev
+tags: [cloudflare, tips]
+---
+
+| コマンド | 用途 |
+| --- | --- |
+| `npx wrangler login` | Cloudflare アカウントへのログイン |
+| `npx wrangler whoami` | ログイン中のアカウント確認 |
+| `npx wrangler tail` | 本番 Worker のログをリアルタイム表示 |
+| `npx wrangler deployments list` | デプロイ履歴の確認 |
+| `npx wrangler rollback` | 直前のバージョンへ戻す |
+
+障害時は `tail` でエラーを確認し、必要なら `rollback` で戻す、という手順を決めておくと落ち着いて対応できます。

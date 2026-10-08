@@ -1,0 +1,30 @@
+@use "../../styles/mixins" as *;
+
+.wrapper {
+  @include container;
+  padding-top: 48px;
+}
+
+.title {
+  font-size: 1.75rem;
+}
+
+.section {
+  margin-top: 40px;
+}
+
+.heading {
+  margin-bottom: 12px;
+  font-size: 1.125rem;
+}
+
+.categories {
+  display: grid;
+  gap: 6px;
+  padding-left: 1.25em;
+}
+
+.count {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}

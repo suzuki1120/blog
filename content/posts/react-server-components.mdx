@@ -1,0 +1,13 @@
+---
+title: Server Components で書くと何が減るのか
+description: ブログのような表示中心のサイトで Server Components を使った場合に、ブラウザへ送る JavaScript がどう変わるかを整理します。
+date: 2026-09-15
+category: tech
+tags: [react, nextjs]
+---
+
+App Router では、コンポーネントは標準で Server Components として扱われます。サーバー側（このブログではビルド時）で HTML に変換されるため、そのコンポーネントの JavaScript はブラウザに送られません。
+
+このブログでも、クリック操作などが必要な部分はないため、すべて Server Components のまま書いています。
+
+ブラウザ側で状態を持つ必要がある部品だけ `"use client"` を付けて Client Components にする、という分け方が基本になります。

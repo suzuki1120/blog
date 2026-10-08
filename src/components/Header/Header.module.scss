@@ -1,0 +1,42 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.header {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.inner {
+  @include container($wide-width);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+  padding-block: 16px;
+}
+
+.logo {
+  color: var(--color-text);
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+  @include focus-ring;
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9375rem;
+
+  a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    @include focus-ring;
+
+    &:hover {
+      color: var(--color-text);
+    }
+  }
+}

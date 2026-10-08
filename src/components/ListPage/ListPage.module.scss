@@ -1,0 +1,21 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.wrapper {
+  @include container;
+  padding-top: 24px;
+}
+
+.header {
+  padding-block: 24px 8px;
+}
+
+.title {
+  font-size: 1.75rem;
+  line-height: 1.4;
+}
+
+.lead {
+  margin-top: 4px;
+  color: var(--color-text-muted);
+}

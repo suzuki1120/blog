@@ -1,0 +1,35 @@
+---
+title: CSS Modules と SCSS の組み合わせ
+description: コンポーネントごとにスタイルを分けつつ、変数や mixin を共通化する構成例です。
+date: 2026-10-04
+category: tech
+tags: [scss, react]
+---
+
+CSS Modules はクラス名をファイル単位で自動的にユニークにするため、名前の衝突を気にせずに書けます。SCSS と組み合わせると、変数や mixin も共通化できます。
+
+## ディレクトリ構成
+
+```text
+src/
+├── styles/
+│   ├── _variables.scss
+│   └── _mixins.scss
+└── components/
+    └── Header/
+        ├── Header.tsx
+        └── Header.module.scss
+```
+
+## 共通ファイルの読み込み
+
+```scss title="Header.module.scss"
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.inner {
+  @include container($wide-width);
+}
+```
+
+色はダークモードで切り替えるため、SCSS 変数ではなく CSS 変数（`var(--color-text)` など）で管理しています。

@@ -1,0 +1,13 @@
+// レイアウト・タイポグラフィの共通値。色は globals.scss の CSS 変数で管理する
+
+$content-width: 720px;
+$wide-width: 960px;
+$gutter: 16px;
+
+$bp-sm: 600px;
+$bp-md: 900px;
+
+$font-sans: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", Meiryo, system-ui, sans-serif;
+$font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+$radius: 8px;

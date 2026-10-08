@@ -1,0 +1,21 @@
+---
+title: TypeScript の satisfies を設定ファイルで使う
+description: 型チェックを効かせながら、値のリテラル型も保てる satisfies 演算子の使いどころです。
+date: 2026-09-20
+category: tech
+tags: [typescript]
+---
+
+設定オブジェクトに型注釈を付けると、値の具体的な型（リテラル型）が失われます。`satisfies` を使うと、型チェックとリテラル型の保持を両立できます。
+
+```ts
+type Route = { path: string; label: string };
+
+const routes = {
+  home: { path: "/", label: "ホーム" },
+  tags: { path: "/tags", label: "タグ" },
+} satisfies Record<string, Route>;
+
+// routes.home のキー補完が効き、存在しないキーはエラーになる
+routes.home.path;
+```

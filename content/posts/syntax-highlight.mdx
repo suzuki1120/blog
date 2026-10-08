@@ -1,0 +1,51 @@
+---
+title: コードブロックの書き方
+description: ファイル名の表示、行のハイライト、行番号など、記事内でコードを見やすく載せるための書き方です。
+date: 2026-10-07
+category: tech
+tags: [mdx, typescript]
+---
+
+コードのハイライトは `rehype-pretty-code`（内部で Shiki を使用）でビルド時に処理しています。ブラウザ側で JavaScript を読み込む必要はありません。
+
+## 基本
+
+言語名を書くだけで色が付きます。
+
+```ts
+export function add(a: number, b: number): number {
+  return a + b;
+}
+```
+
+## ファイル名と行のハイライト
+
+`title="..."` でファイル名、`{2,4-5}` で強調する行を指定できます。
+
+```tsx title="src/components/Greeting.tsx" {2,4-5}
+type Props = { name: string };
+
+export function Greeting({ name }: Props) {
+  const message = `こんにちは、${name}さん`;
+  return <p>{message}</p>;
+}
+```
+
+## 行番号
+
+`showLineNumbers` を付けると行番号が表示されます。
+
+```scss showLineNumbers
+.button {
+  padding: 8px 16px;
+  border-radius: 6px;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+```
+
+## インラインコード
+
+文中では `npm run dev` のように書けます。

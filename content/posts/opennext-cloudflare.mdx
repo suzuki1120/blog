@@ -1,0 +1,36 @@
+---
+title: Next.js を Cloudflare Workers で動かす
+description: OpenNext の Cloudflare アダプターを使って Next.js アプリを Workers にデプロイする手順です。
+date: 2026-10-06
+category: tech
+tags: [nextjs, cloudflare]
+---
+
+Cloudflare で Next.js を動かす場合、現在は `@opennextjs/cloudflare` を使う方法が公式に案内されています。
+
+## 導入
+
+既存の Next.js プロジェクトでは、次のコマンドで必要なファイルが生成されます。
+
+```bash
+npx @opennextjs/cloudflare migrate
+```
+
+生成される主なファイルは次のとおりです。
+
+- `wrangler.jsonc`：Worker の名前や互換性フラグの設定
+- `open-next.config.ts`：キャッシュの保存先などの設定
+- `.dev.vars`：ローカル開発用の環境変数
+
+## 確認とデプロイ
+
+```bash
+npm run preview   # Workers と同じランタイムでローカル確認
+npm run deploy    # Cloudflare へデプロイ
+```
+
+`next dev` は Node.js 上で動くため、本番と同じ挙動を確かめたいときは `preview` を使います。
+
+## 注意点
+
+Edge ランタイム（`export const runtime = "edge"`）には対応していません。Node.js ランタイムのまま使います。
