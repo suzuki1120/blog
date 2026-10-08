@@ -2,41 +2,90 @@
 @use "../../styles/mixins" as *;
 
 .header {
-  border-bottom: 1px solid var(--color-border);
+  overflow: hidden;
+  border: 1px solid var(--color-rule);
+  border-radius: $radius;
+  background: var(--color-box);
+  box-shadow: 2px 2px 0 var(--color-rule);
 }
 
-.inner {
-  @include container($wide-width);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px 24px;
-  padding-block: 16px;
+.banner {
+  padding: 28px 16px 20px;
+  border-bottom: 1px dotted var(--color-rule);
+  background:
+    radial-gradient(circle, var(--color-box) 2px, transparent 2.5px) 0 0 / 16px 16px,
+    linear-gradient(var(--color-header-2), var(--color-header));
+  text-align: center;
 }
 
 .logo {
-  color: var(--color-text);
-  font-size: 1.25rem;
-  font-weight: 700;
-  text-decoration: none;
-  @include focus-ring;
+  font-family: $font-display;
+  font-size: clamp(1.75rem, 6vw, 2.5rem);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+
+  a,
+  a:visited {
+    color: var(--color-pink);
+    text-decoration: none;
+    text-shadow:
+      2px 2px 0 var(--color-box),
+      3px 3px 0 var(--color-rule-pink);
+  }
+
+  a:hover {
+    color: var(--color-hover);
+  }
 }
 
-.nav {
-  display: flex;
-  gap: 20px;
-  padding: 0;
-  list-style: none;
-  font-size: 0.9375rem;
+.tagline {
+  margin-top: 6px;
+  color: var(--color-ink-2);
+  font-size: 0.8125rem;
+}
 
-  a {
-    color: var(--color-text-muted);
-    text-decoration: none;
-    @include focus-ring;
+.nav ul {
+  @include pipe-list;
+  justify-content: center;
+  padding: 4px 8px;
+  background: var(--color-box-2);
+  font-size: 0.875rem;
 
-    &:hover {
-      color: var(--color-text);
+  li {
+    white-space: nowrap;
+  }
+}
+
+.ticker {
+  overflow: hidden;
+  border-top: 1px dotted var(--color-rule);
+  color: var(--color-pink);
+  font-family: $font-dot;
+  font-size: 0.8125rem;
+
+  p {
+    width: max-content;
+    padding: 2px 0 2px 100%;
+    white-space: nowrap;
+    animation: ticker 18s linear infinite;
+  }
+
+  &:hover p {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    p {
+      width: auto;
+      padding-left: 12px;
+      white-space: normal;
+      animation: none;
     }
+  }
+}
+
+@keyframes ticker {
+  to {
+    transform: translateX(-100%);
   }
 }

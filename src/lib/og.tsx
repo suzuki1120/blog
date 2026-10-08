@@ -19,8 +19,20 @@ async function loadFont(text: string): Promise<ArrayBuffer | undefined> {
   }
 }
 
+// OG 画像の描画（Satori）は OKLCH に対応していないため、globals.scss のトークンに近い値を 16 進で持つ
+const colors = {
+  paper: "#e3f1f8",
+  check: "rgba(178, 216, 235, 0.5)",
+  box: "#fffdf9",
+  rule: "#b4d0dd",
+  pink: "#d64f86",
+  ink: "#4a3a36",
+  ink2: "#7a6a66",
+};
+
 export async function renderOgImage({ title, subtitle }: { title: string; subtitle?: string }) {
-  const font = await loadFont(`${title}${subtitle ?? ""}${siteConfig.name}`);
+  const brand = `☆ ${siteConfig.name} ☆`;
+  const font = await loadFont(`${title}${subtitle ?? ""}${brand}`);
 
   return new ImageResponse(
     (
@@ -29,19 +41,41 @@ export async function renderOgImage({ title, subtitle }: { title: string; subtit
           width: "100%",
           height: "100%",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          padding: "72px 80px",
-          background: "#15181d",
-          color: "#e6e8eb",
+          padding: 56,
+          backgroundColor: colors.paper,
+          backgroundImage: `repeating-linear-gradient(0deg, ${colors.check} 0px, ${colors.check} 24px, transparent 24px, transparent 48px), repeating-linear-gradient(90deg, ${colors.check} 0px, ${colors.check} 24px, transparent 24px, transparent 48px)`,
+          color: colors.ink,
           fontFamily: font ? "Noto Sans JP" : undefined,
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          {subtitle && <div style={{ fontSize: 32, color: "#6aa8ff" }}>{subtitle}</div>}
-          <div style={{ fontSize: title.length > 40 ? 52 : 64, fontWeight: 700, lineHeight: 1.35 }}>{title}</div>
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            border: `3px solid ${colors.rule}`,
+            borderRadius: 8,
+            background: colors.box,
+            boxShadow: `8px 8px 0 ${colors.rule}`,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              padding: "10px 32px",
+              background: colors.pink,
+              color: colors.box,
+              fontSize: 34,
+              fontWeight: 700,
+            }}
+          >
+            {brand}
+          </div>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 20, padding: "0 48px" }}>
+            {subtitle && <div style={{ fontSize: 30, color: colors.ink2 }}>{subtitle}</div>}
+            <div style={{ fontSize: title.length > 40 ? 50 : 60, fontWeight: 700, lineHeight: 1.4 }}>{title}</div>
+          </div>
         </div>
-        <div style={{ display: "flex", fontSize: 32, color: "#9aa3ad" }}>{siteConfig.name}</div>
       </div>
     ),
     {

@@ -1,13 +1,16 @@
 // レイアウト・タイポグラフィの共通値。色は globals.scss の CSS 変数で管理する
 
-$content-width: 720px;
-$wide-width: 960px;
-$gutter: 16px;
+$page-width: 960px;
+$sidebar-width: 240px;
+$gutter: 12px;
 
 $bp-sm: 600px;
 $bp-md: 900px;
 
-$font-sans: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", Meiryo, system-ui, sans-serif;
+// --font-display / --font-dot は layout.tsx の next/font が定義する
+$font-display: var(--font-display), "Hiragino Maru Gothic ProN", "HG丸ｺﾞｼｯｸM-PRO", sans-serif;
+$font-dot: var(--font-dot), "Osaka", monospace;
+$font-body: Verdana, "Hiragino Kaku Gothic ProN", Meiryo, "MS PGothic", sans-serif;
 $font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
-$radius: 8px;
+$radius: 4px;

@@ -2,20 +2,21 @@
 @use "../../styles/mixins" as *;
 
 .wrapper {
-  @include container;
-  padding-top: 24px;
+  display: grid;
+  gap: $gutter;
+  min-width: 0;
 }
 
 .header {
-  padding-block: 24px 8px;
+  @include box;
 }
 
 .title {
-  font-size: 1.75rem;
-  line-height: 1.4;
+  @include box-heading;
+  font-size: 1rem;
 }
 
 .lead {
-  margin-top: 4px;
-  color: var(--color-text-muted);
+  color: var(--color-ink-2);
+  font-size: 0.875rem;
 }

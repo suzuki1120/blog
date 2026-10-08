@@ -29,6 +29,6 @@ export default async function TagPage({ params }: Props) {
   const page = paginate(posts, 1);
   if (!page || posts.length === 0) notFound();
   return (
-    <ListPage title={`#${tags[tag]}`} lead={`${posts.length}件の記事`} page={page} basePath={`/tags/${tag}`} />
+    <ListPage title={`タグ: ${tags[tag]}`} lead={`${posts.length}件の記事`} page={page} basePath={`/tags/${tag}`} />
   );
 }

@@ -1,13 +1,21 @@
+@use "../styles/variables" as *;
 @use "../styles/mixins" as *;
 
 .wrapper {
-  @include container;
+  @include box;
   display: grid;
-  gap: 12px;
-  padding-top: 80px;
+  gap: 8px;
+  padding-block: 40px;
   text-align: center;
 }
 
+.code {
+  color: var(--color-pink);
+  font-family: $font-dot;
+  font-size: clamp(2rem, 9vw, 3.5rem);
+  line-height: 1.2;
+}
+
 .title {
-  font-size: 1.75rem;
+  font-size: 1.25rem;
 }

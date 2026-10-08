@@ -16,20 +16,35 @@
   }
 
   h2 {
-    margin-top: 2.5em;
-    padding-bottom: 0.3em;
-    border-bottom: 1px solid var(--color-border);
-    font-size: 1.5rem;
+    margin-top: 2.25em;
+    padding: 0.2em 0.6em;
+    border-left: 6px solid var(--color-pink);
+    border-bottom: 1px dotted var(--color-rule-pink);
+    background: var(--color-pink-soft);
+    font-size: 1.25rem;
   }
 
   h3 {
     margin-top: 2em;
-    font-size: 1.25rem;
+    padding-bottom: 0.15em;
+    border-bottom: 1px dashed var(--color-rule);
+    font-size: 1.125rem;
+
+    &::before {
+      content: "■";
+      margin-right: 0.3em;
+      color: var(--color-pink);
+    }
   }
 
   h4 {
     margin-top: 1.75em;
-    font-size: 1.0625rem;
+    font-size: 1rem;
+
+    &::before {
+      content: "・";
+      color: var(--color-pink);
+    }
   }
 
   ul,
@@ -42,19 +57,24 @@
   }
 
   blockquote {
-    padding: 0.25em 1em;
-    border-left: 4px solid var(--color-border);
-    color: var(--color-text-muted);
+    padding: 0.6em 1em;
+    border: 1px dotted var(--color-rule);
+    background: var(--color-box-2);
+    color: var(--color-ink-2);
   }
 
   hr {
     margin-block: 2.5em;
     border: 0;
-    border-top: 1px solid var(--color-border);
+    border-top: 2px dotted var(--color-rule-pink);
   }
 
+  // 写真風の白枠
   img {
-    border-radius: $radius;
+    padding: 4px;
+    border: 1px solid var(--color-rule);
+    background: var(--color-box);
+    box-shadow: 2px 2px 0 var(--color-rule);
   }
 
   // 表は横にはみ出さないよう、表自体をスクロールさせる
@@ -69,12 +89,12 @@
   th,
   td {
     padding: 0.5em 0.9em;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-rule);
     text-align: left;
   }
 
   th {
-    background: var(--color-surface);
+    background: var(--color-box-2);
   }
 
   // インラインコード
@@ -93,11 +113,10 @@
   [data-rehype-pretty-code-title] {
     display: inline-block;
     padding: 0.3em 0.9em;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-rule);
     border-bottom: 0;
-    border-radius: $radius $radius 0 0;
-    background: var(--color-surface);
-    color: var(--color-text-muted);
+    background: var(--color-box-2);
+    color: var(--color-ink-2);
     font-family: $font-mono;
     font-size: 0.8125rem;
 
@@ -110,8 +129,7 @@
   pre {
     overflow-x: auto;
     padding-block: 1em;
-    border: 1px solid var(--color-border);
-    border-radius: $radius;
+    border: 1px dashed var(--color-rule);
     background: var(--color-code-bg);
     font-size: 0.875rem;
     line-height: 1.7;
@@ -129,7 +147,7 @@
 
   [data-highlighted-line] {
     background: var(--color-code-highlight);
-    box-shadow: inset 3px 0 0 var(--color-accent);
+    box-shadow: inset 3px 0 0 var(--color-pink);
   }
 
   [data-highlighted-chars] {
@@ -148,20 +166,14 @@
       display: inline-block;
       width: 1.5em;
       margin-right: 1.25em;
-      color: var(--color-text-muted);
+      color: var(--color-ink-2);
       text-align: right;
       opacity: 0.6;
     }
   }
 
-  // Shiki のライト／ダーク二重テーマ
+  // Shiki は二重テーマで出力されるが、ライトテーマの色だけを使う
   code[data-theme*=" "] span {
     color: var(--shiki-light);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    code[data-theme*=" "] span {
-      color: var(--shiki-dark);
-    }
   }
 }

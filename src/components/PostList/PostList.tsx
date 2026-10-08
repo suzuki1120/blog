@@ -7,7 +7,7 @@ export function PostList({ posts }: { posts: Post[] }) {
     return <p className={styles.empty}>記事はまだありません。</p>;
   }
   return (
-    <div>
+    <div className={styles.list}>
       {posts.map((post) => (
         <PostCard key={post.slug} post={post} />
       ))}

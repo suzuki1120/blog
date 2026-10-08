@@ -2,13 +2,75 @@
 @use "../../styles/mixins" as *;
 
 .footer {
-  margin-top: 80px;
-  border-top: 1px solid var(--color-border);
-  color: var(--color-text-muted);
+  @include box;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  margin-top: $gutter;
+  text-align: center;
 }
 
-.inner {
-  @include container($wide-width);
-  padding-block: 24px;
-  text-align: center;
+.toTop {
+  justify-self: end;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  padding: 0;
+  list-style: none;
+}
+
+// 80×15 の小さなバナーを CSS だけで再現する
+.badge {
+  display: inline-flex;
+  align-items: stretch;
+  height: 15px;
+  padding-right: 3px;
+  border: 1px solid var(--color-ink);
+  background: var(--color-box);
+  color: var(--color-ink);
+  font-family: $font-dot;
+  font-size: 10px;
+  line-height: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &,
+  &:visited {
+    color: var(--color-ink);
+  }
+
+  > span {
+    padding-inline: 3px;
+    margin-right: 3px;
+    color: var(--color-badge-text);
+  }
+}
+
+a.badge:hover {
+  border-color: var(--color-hover);
+}
+
+.rss > span {
+  background: var(--color-badge-rss);
+}
+
+.next > span {
+  background: var(--color-badge-next);
+}
+
+.cf > span {
+  background: var(--color-badge-cf);
+}
+
+.copyright,
+.powered {
+  color: var(--color-ink-2);
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
 }

@@ -1,4 +1,12 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.list {
+  display: grid;
+  gap: $gutter;
+}
+
 .empty {
-  padding-block: 40px;
-  color: var(--color-text-muted);
+  @include box;
+  color: var(--color-ink-2);
 }

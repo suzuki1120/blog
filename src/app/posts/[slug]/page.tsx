@@ -52,37 +52,53 @@ export default async function PostPage({ params }: Props) {
   return (
     <article className={styles.article}>
       <header className={styles.header}>
-        <div className={styles.meta}>
+        <p className={styles.date}>
           <time dateTime={post.date}>{formatDate(post.date)}</time>
-          {post.updated && (
-            <span>
-              更新 <time dateTime={post.updated}>{formatDate(post.updated)}</time>
-            </span>
+        </p>
+        <h1 className={styles.title}>
+          <span aria-hidden="true">▼</span>
+          {post.title}
+        </h1>
+        <ul className={styles.meta}>
+          <li>
+            カテゴリ: <Link href={`/categories/${post.category}`}>{categories[post.category]}</Link>
+          </li>
+          {post.tags.length > 0 && (
+            <li>
+              タグ: <TagList tags={post.tags} />
+            </li>
           )}
-          <Link href={`/categories/${post.category}`}>{categories[post.category]}</Link>
-          <span>約{post.readingMinutes}分で読めます</span>
-        </div>
-        <h1 className={styles.title}>{post.title}</h1>
-        <TagList tags={post.tags} />
+          {post.updated && (
+            <li>
+              更新: <time dateTime={post.updated}>{formatDate(post.updated)}</time>
+            </li>
+          )}
+          <li>約{post.readingMinutes}分で読めます</li>
+        </ul>
       </header>
 
       <MdxContent code={post.mdx} />
 
       <nav aria-label="前後の記事" className={styles.adjacent}>
-        {older ? (
-          <Link href={`/posts/${older.slug}`} className={styles.adjacentLink}>
-            <span className={styles.adjacentLabel}>← 前の記事</span>
-            {older.title}
-          </Link>
-        ) : (
-          <span />
-        )}
-        {newer && (
-          <Link href={`/posts/${newer.slug}`} className={`${styles.adjacentLink} ${styles.next}`}>
-            <span className={styles.adjacentLabel}>次の記事 →</span>
-            {newer.title}
-          </Link>
-        )}
+        <ul>
+          {older && (
+            <li>
+              <Link href={`/posts/${older.slug}`} rel="prev" title={older.title}>
+                « 前の記事
+              </Link>
+            </li>
+          )}
+          <li>
+            <Link href="/">HOME</Link>
+          </li>
+          {newer && (
+            <li>
+              <Link href={`/posts/${newer.slug}`} rel="next" title={newer.title}>
+                次の記事 »
+              </Link>
+            </li>
+          )}
+        </ul>
       </nav>
     </article>
   );

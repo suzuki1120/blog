@@ -1,0 +1,12 @@
+[
+  {
+    "date": "2026-10-08",
+    "scope": "app",
+    "macrostructure": "custom (bespoke): 国産ブログサービス風 2 カラム",
+    "theme": "custom",
+    "theme_axes": "light / rounded-sans / chromatic-pink",
+    "vibe": "2005 年頃の無料ブログテンプレート、パステル、チープ",
+    "enrichment": "none",
+    "brief": "Next.js 技術ブログを Web 2.0 期の国産ブログ風に作り替え"
+  }
+]

@@ -19,34 +19,28 @@ export function Pagination({ currentPage, totalPages, basePath }: Props) {
 
   return (
     <nav aria-label="ページ送り" className={styles.pagination}>
-      {currentPage > 1 ? (
-        <Link href={pageHref(basePath, currentPage - 1)} className={styles.step} rel="prev">
-          ← 前へ
+      {currentPage > 1 && (
+        <Link href={pageHref(basePath, currentPage - 1)} rel="prev" className={styles.step}>
+          « 前のページ
         </Link>
-      ) : (
-        <span className={styles.step} aria-hidden="true" />
       )}
       <ol className={styles.pages}>
         {pages.map((page) => (
           <li key={page}>
             {page === currentPage ? (
               <span className={styles.current} aria-current="page">
-                {page}
+                [{page}]
               </span>
             ) : (
-              <Link href={pageHref(basePath, page)} className={styles.page}>
-                {page}
-              </Link>
+              <Link href={pageHref(basePath, page)}>{page}</Link>
             )}
           </li>
         ))}
       </ol>
-      {currentPage < totalPages ? (
-        <Link href={pageHref(basePath, currentPage + 1)} className={styles.step} rel="next">
-          次へ →
+      {currentPage < totalPages && (
+        <Link href={pageHref(basePath, currentPage + 1)} rel="next" className={styles.step}>
+          次のページ »
         </Link>
-      ) : (
-        <span className={styles.step} aria-hidden="true" />
       )}
     </nav>
   );

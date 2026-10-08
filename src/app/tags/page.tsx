@@ -24,7 +24,7 @@ export default function TagsPage() {
           {getUsedCategories().map((c) => (
             <li key={c.slug}>
               <Link href={`/categories/${c.slug}`}>{c.name}</Link>
-              <span className={styles.count}>（{c.count}）</span>
+              <span className={styles.count}> ({c.count})</span>
             </li>
           ))}
         </ul>
@@ -32,7 +32,7 @@ export default function TagsPage() {
 
       <section className={styles.section}>
         <h2 className={styles.heading}>タグ</h2>
-        <TagList tags={usedTags.map((t) => t.slug)} counts={counts} />
+        <TagList tags={usedTags.map((t) => t.slug)} counts={counts} variant="cloud" />
       </section>
     </div>
   );

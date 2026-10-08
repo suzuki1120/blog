@@ -1,0 +1,45 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.calendar {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: $font-dot;
+  font-size: 0.8125rem;
+  line-height: 1.9;
+  text-align: center;
+
+  th {
+    border-bottom: 1px dotted var(--color-rule);
+    font-weight: 400;
+  }
+}
+
+.caption {
+  margin-bottom: 4px;
+  font-size: 0.875rem;
+}
+
+.sun {
+  color: var(--color-new);
+}
+
+.sat {
+  color: var(--color-link);
+}
+
+.posted {
+  display: block;
+  border-radius: 2px;
+  background: var(--color-pink-soft);
+  font-weight: 700;
+
+  &,
+  &:visited {
+    color: var(--color-pink);
+  }
+
+  &:hover {
+    color: var(--color-hover);
+  }
+}

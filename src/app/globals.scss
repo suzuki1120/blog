@@ -1,31 +1,50 @@
+/* Hallmark · route: custom (bespoke) · structure: 2005 年頃の国産ブログサービス（日付帯の記事箱 + 右サイドバー）
+ * idea: "無料テンプレートのチープさ" · paper: oklch(95% 0.03 220) gingham · accent: oklch(62% 0.17 0)
+ * display: Kosugi Maru · body: Verdana / Hiragino / Meiryo · outlier: DotGothic16
+ * axes: light / rounded-sans / chromatic-pink · design-system: design.md · designed-as-app
+ */
 @use "../styles/variables" as *;
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 
-  --color-bg: #ffffff;
-  --color-surface: #f6f7f9;
-  --color-text: #1f2328;
-  --color-text-muted: #5b6470;
-  --color-border: #e1e4e8;
-  --color-accent: #0b62d6;
-  --color-accent-soft: #e8f0fc;
-  --color-code-bg: #f6f8fa;
-  --color-code-highlight: rgba(11, 98, 214, 0.08);
-}
+  // 背景（水色のギンガムチェック）
+  --color-paper: oklch(95% 0.03 220);
+  --color-paper-check: oklch(88% 0.05 220 / 0.45);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #15181d;
-    --color-surface: #1d2128;
-    --color-text: #e6e8eb;
-    --color-text-muted: #9aa3ad;
-    --color-border: #2e343d;
-    --color-accent: #6aa8ff;
-    --color-accent-soft: #1d2b40;
-    --color-code-bg: #1d2128;
-    --color-code-highlight: rgba(106, 168, 255, 0.1);
-  }
+  // 箱
+  --color-box: oklch(99.5% 0.004 85);
+  --color-box-2: oklch(97% 0.012 85);
+  --color-rule: oklch(80% 0.04 220);
+  --color-rule-pink: oklch(84% 0.06 0);
+
+  // 文字
+  --color-ink: oklch(32% 0.02 30);
+  --color-ink-2: oklch(50% 0.02 30);
+  --color-on-pink: oklch(99% 0.005 0);
+
+  // アクセント
+  --color-pink: oklch(58% 0.17 0);
+  --color-pink-soft: oklch(94% 0.035 0);
+  --color-new: oklch(56% 0.22 25);
+  --color-header: oklch(90% 0.06 220);
+  --color-header-2: oklch(97% 0.025 220);
+
+  // リンク（青 → 訪問済み紫 → ホバーでオレンジ）
+  --color-link: oklch(46% 0.17 255);
+  --color-visited: oklch(44% 0.15 310);
+  --color-hover: oklch(58% 0.18 45);
+  --color-focus: oklch(55% 0.2 255);
+
+  // バナー
+  --color-badge-rss: oklch(68% 0.18 50);
+  --color-badge-next: oklch(28% 0.01 260);
+  --color-badge-cf: oklch(70% 0.16 60);
+  --color-badge-text: oklch(99% 0 0);
+
+  // コード
+  --color-code-bg: oklch(98% 0.006 220);
+  --color-code-highlight: oklch(93% 0.05 90);
 }
 
 *,
@@ -39,17 +58,21 @@
 }
 
 html {
+  overflow-x: clip;
   -webkit-text-size-adjust: 100%;
 }
 
 body {
+  overflow-x: clip;
   min-height: 100dvh;
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-family: $font-sans;
-  font-size: 16px;
+  background-color: var(--color-paper);
+  background-image:
+    repeating-linear-gradient(0deg, var(--color-paper-check) 0 12px, transparent 12px 24px),
+    repeating-linear-gradient(90deg, var(--color-paper-check) 0 12px, transparent 12px 24px);
+  color: var(--color-ink);
+  font-family: $font-body;
+  font-size: 15px;
   line-height: 1.8;
-  -webkit-font-smoothing: antialiased;
 }
 
 img,
@@ -61,7 +84,29 @@ video {
 }
 
 a {
-  color: var(--color-accent);
+  color: var(--color-link);
+
+  &:visited {
+    color: var(--color-visited);
+  }
+
+  &:hover {
+    color: var(--color-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: $font-display;
+  font-style: normal;
+  font-weight: 400;
 }
 
 button,
@@ -82,4 +127,18 @@ kbd {
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  padding: 4px 12px;
+  background: var(--color-box);
+  transform: translateY(-200%);
+
+  &:focus-visible {
+    transform: none;
+  }
 }

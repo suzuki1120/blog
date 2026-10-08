@@ -30,7 +30,7 @@ export default async function TagPagedPage({ params }: Props) {
   if (!page || page.currentPage === 1) notFound();
   return (
     <ListPage
-      title={`#${tags[tag]}`}
+      title={`タグ: ${tags[tag]}`}
       lead={`${posts.length}件の記事（${page.currentPage} / ${page.totalPages} ページ）`}
       page={page}
       basePath={`/tags/${tag}`}
