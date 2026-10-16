@@ -29,6 +29,7 @@ export function toFileRow(post: Post): FileRow {
     slug: post.slug,
     name: fileName(post),
     size: formatSize(post.byteSize),
+    bytes: post.byteSize,
     hash: fileHash(post.slug),
     date: post.date,
     isNew: isNewPost(post.date),

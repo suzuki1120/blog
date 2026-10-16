@@ -5,6 +5,8 @@ export type FileRow = {
   slug: string;
   name: string;
   size: string;
+  /** 並べ替え用の本文のバイト数 */
+  bytes: number;
   hash: string;
   date: string;
   isNew: boolean;

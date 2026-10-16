@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteConfig.url}/tags` },
     { url: `${siteConfig.url}/archives` },
     { url: `${siteConfig.url}/about` },
+    { url: `${siteConfig.url}/links` },
     ...posts.map((post) => ({
       url: `${siteConfig.url}/posts/${post.slug}`,
       lastModified: post.updated ?? post.date,

@@ -1,0 +1,104 @@
+@use "../../styles/mixins" as *;
+
+// カード全体を押せるようにし、ホバー・フォーカスでタイトルを選択色にする
+.card {
+  @include win-raised;
+  position: relative;
+  display: flex;
+  gap: 12px;
+  max-width: 560px;
+  padding: 10px 12px;
+  color: var(--win-ink);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  line-height: 1.6;
+
+  &:hover .link,
+  &:focus-within .link {
+    background: var(--win-select);
+    color: var(--win-on-select);
+  }
+}
+
+// 書類アイコンの左下に、ショートカットの矢印を重ねる
+.icon {
+  @include file-icon;
+  position: relative;
+  width: 26px;
+  height: 32px;
+  margin-top: 2px;
+  background: linear-gradient(225deg, var(--win-face) 7px, var(--win-field) 7px);
+}
+
+.arrow {
+  position: absolute;
+  bottom: -1px;
+  left: -1px;
+  width: 11px;
+  height: 11px;
+  border: 1px solid var(--win-dark);
+  background: var(--win-field);
+
+  &::after {
+    content: "↗";
+    position: absolute;
+    inset: -2px 0 0 1px;
+    color: var(--win-dark);
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 11px;
+  }
+}
+
+.text {
+  min-width: 0;
+}
+
+.link {
+  padding-inline: 2px;
+  font-weight: 700;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+
+  &,
+  &:visited {
+    color: var(--win-ink);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+// カード全体にフォーカスの点線を出す
+.card:has(.link:focus-visible) {
+  outline: 1px dotted var(--win-ink);
+  outline-offset: -4px;
+}
+
+.ext {
+  color: var(--win-ink-2);
+}
+
+.description {
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+
+.target {
+  margin-top: 2px;
+  color: var(--win-ink-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.label {
+  font-family: var(--font-ui);
+}

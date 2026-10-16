@@ -2,6 +2,10 @@ import { MDXContent } from "@content-collections/mdx/react";
 import Link from "next/link";
 import { Children, isValidElement, type ComponentProps } from "react";
 import { CopyButton } from "@/components/CopyButton/CopyButton";
+import { Download } from "@/components/Download/Download";
+import { ImageViewer } from "@/components/ImageViewer/ImageViewer";
+import { LinkCard } from "@/components/LinkCard/LinkCard";
+import { MessageBox } from "@/components/MessageBox/MessageBox";
 import styles from "./MdxContent.module.scss";
 
 // サイト内リンクは next/link、外部リンクは別タブで開く
@@ -62,7 +66,17 @@ function Figure(props: ComponentProps<"figure">) {
   );
 }
 
-const components = { a: Anchor, h2: headingWithAnchor("h2"), h3: headingWithAnchor("h3"), figure: Figure };
+const components = {
+  a: Anchor,
+  h2: headingWithAnchor("h2"),
+  h3: headingWithAnchor("h3"),
+  figure: Figure,
+  // 記事の中で <MessageBox> のように書いて使う部品
+  MessageBox,
+  LinkCard,
+  ImageViewer,
+  Download,
+};
 
 export function MdxContent({ code }: { code: string }) {
   return (

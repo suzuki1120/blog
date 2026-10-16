@@ -74,6 +74,17 @@ export function getRelatedPosts(post: Post, limit = 5): Post[] {
     .map(({ other }) => other);
 }
 
+/** 新規公開と更新を日付の新しい順に並べた更新履歴 */
+export function getUpdates(limit = 5): { post: Post; date: string; kind: "新規" | "更新" }[] {
+  return published
+    .flatMap((post) => [
+      { post, date: post.date, kind: "新規" as const },
+      ...(post.updated ? [{ post, date: post.updated, kind: "更新" as const }] : []),
+    ])
+    .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
+    .slice(0, limit);
+}
+
 /** "2026-10" の形の年月 */
 export function toYearMonth(date: string): string {
   return date.slice(0, 7);

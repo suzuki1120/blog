@@ -1,0 +1,74 @@
+@use "../../styles/mixins" as *;
+
+.window {
+  @include win-window;
+  margin-inline: 0;
+}
+
+.titlebar {
+  @include win-titlebar;
+}
+
+// 画像ファイルのアイコン（青空と緑の丘）
+.icon {
+  flex-shrink: 0;
+  width: 14px;
+  height: 12px;
+  border: 1px solid var(--win-dark);
+  background: linear-gradient(var(--color-cyan) 60%, var(--color-neon-dim) 60%);
+}
+
+.title {
+  @include win-title-text;
+}
+
+.controls {
+  @include win-controls;
+}
+
+// 画像の周りは、ビューアの暗い灰色の作業領域にする
+.view {
+  @include win-sunken;
+  display: grid;
+  place-items: center;
+  margin: 2px 0;
+  padding: 10px;
+  background: var(--win-shadow);
+  cursor: zoom-in;
+
+  &:focus-visible {
+    outline: 1px dotted var(--win-light);
+    outline-offset: -4px;
+  }
+}
+
+.image {
+  max-height: 480px;
+  width: auto;
+  border: 1px solid var(--win-dark);
+}
+
+.status {
+  display: flex;
+  gap: 2px;
+
+  > span {
+    @include win-sunken;
+    padding: 1px 6px;
+    white-space: nowrap;
+  }
+
+  > span:first-child {
+    flex: 1;
+  }
+}
+
+.caption {
+  padding: 6px 4px 2px;
+  overflow-wrap: anywhere;
+}
+
+.full {
+  width: 100%;
+  height: auto;
+}

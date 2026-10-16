@@ -21,6 +21,12 @@
   @include win-controls;
 }
 
+// 検索用の一覧を読み込んでいる間は、Win98 の砂時計カーソルにする（読み込めない環境では OS の待機カーソル）
+.busy,
+.busy * {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='22' viewBox='0 0 16 22' shape-rendering='crispEdges'%3E%3Cpath d='M0 0h16v2H0zM0 20h16v2H0z' fill='black'/%3E%3Cpath d='M2 2h12v4l-5 5 5 5v4H2v-4l5-5-5-5z' fill='black'/%3E%3Cpath d='M3 2h10v3.5L8.5 10h-1L3 5.5zM3 20h10v-3.5L8.5 12h-1L3 16.5z' fill='white'/%3E%3Cpath d='M5 4h6L8 7zM4 20h8L8 16z' fill='black'/%3E%3C/svg%3E") 8 11, progress;
+}
+
 // ---- 検索欄 ----
 .search {
   display: flex;
@@ -66,6 +72,44 @@
   }
 }
 
+// ---- ツールバー（表示形式・ヘルプ） ----
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding: 0 4px 4px;
+}
+
+.viewButtons {
+  display: flex;
+  gap: 2px;
+}
+
+.toolButton {
+  @include win-button;
+  min-width: 0;
+  min-height: 20px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+
+  // 選択中の表示形式は押し込んだ状態にする
+  &[aria-pressed="true"] {
+    @include win-pressed;
+    background-image: repeating-conic-gradient(var(--win-face-light) 0 25%, var(--win-face) 0 50%);
+    background-size: 2px 2px;
+  }
+
+  &:disabled {
+    color: var(--win-shadow);
+    text-shadow: 1px 1px 0 var(--win-light);
+    cursor: default;
+  }
+}
+
 // ---- 一覧の表 ----
 .list {
   @include win-sunken;
@@ -84,6 +128,11 @@
     font-weight: 400;
     text-align: left;
     white-space: nowrap;
+  }
+
+  // 並べ替えできるときは、見出し全体を押せるボタンにする
+  th:has(.sortButton) {
+    padding: 0;
   }
 
   td {
@@ -132,6 +181,108 @@
   }
 }
 
+.sortButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+  padding: 2px 6px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:active {
+    @include win-pressed;
+  }
+
+  &:focus-visible {
+    outline: 1px dotted var(--win-ink);
+    outline-offset: -3px;
+  }
+}
+
+.sortMark {
+  min-width: 1em;
+  font-size: 9px;
+}
+
+// ---- 一覧・アイコン表示 ----
+.nameList,
+.iconGrid {
+  padding: 2px;
+  list-style: none;
+}
+
+// 一覧表示：小さいアイコンとファイル名を、幅に合わせて複数列に並べる
+.nameList {
+  columns: 2 280px;
+  column-gap: 12px;
+
+  li {
+    break-inside: avoid;
+  }
+}
+
+// 大きいアイコン表示
+.iconGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+  gap: 8px;
+  padding: 6px;
+
+  .iconItem {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+.iconItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 2px;
+  text-decoration: none;
+
+  &,
+  &:visited {
+    color: var(--win-ink);
+  }
+
+  .fileIcon {
+    margin: 3px 0 0;
+  }
+
+  &:hover .iconName,
+  &:focus-visible .iconName {
+    background: var(--win-select);
+    color: var(--win-on-select);
+  }
+
+  &:focus-visible {
+    outline: 1px dotted var(--win-ink);
+    outline-offset: 0;
+  }
+}
+
+.iconName {
+  padding-inline: 2px;
+  overflow-wrap: anywhere;
+}
+
+.bigFileIcon {
+  @include file-icon;
+  width: 26px;
+  height: 32px;
+  background: linear-gradient(225deg, var(--win-face) 7px, var(--win-field) 7px);
+}
+
 // 書類アイコン（右上を折った白い紙）
 .fileIcon {
   @include file-icon;
@@ -172,6 +323,7 @@
 
 .draft {
   margin-left: 6px;
+  white-space: nowrap;
   padding-inline: 4px;
   border: 1px solid currentColor;
   font-size: 10px;
@@ -230,4 +382,46 @@
 
 .pageInfo {
   white-space: nowrap;
+}
+
+// <button> に .button を使うときの既定の枠を消す
+button.button {
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+// ---- ヘルプダイアログ ----
+.keys {
+  display: grid;
+  gap: 4px;
+
+  > div {
+    display: grid;
+    grid-template-columns: 7em minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  kbd {
+    @include win-raised;
+    display: inline-block;
+    min-width: 1.8em;
+    padding: 0 4px;
+    font-family: var(--font-ui);
+    font-size: 11px;
+    text-align: center;
+  }
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
 }

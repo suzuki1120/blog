@@ -1,0 +1,88 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.window {
+  @include win-window;
+  max-width: 560px;
+}
+
+.titlebar {
+  @include win-titlebar;
+}
+
+// 転送のアイコン（下向きの矢印）
+.icon {
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+  background: var(--color-neon);
+  clip-path: polygon(30% 0, 70% 0, 70% 50%, 100% 50%, 50% 100%, 0 50%, 30% 50%);
+}
+
+.title {
+  @include win-title-text;
+}
+
+.controls {
+  @include win-controls;
+}
+
+.list {
+  @include win-sunken;
+  margin: 2px 0;
+  padding: 2px;
+  background: var(--win-field);
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    @include win-raised;
+    padding: 2px 6px;
+    font-weight: 400;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 2px 6px;
+    vertical-align: top;
+  }
+}
+
+.name {
+  overflow-wrap: anywhere;
+}
+
+.fileIcon {
+  @include file-icon;
+  margin-right: 6px;
+}
+
+.size {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.note {
+  overflow-wrap: anywhere;
+}
+
+// 狭い画面では説明の列を省く
+@include below($bp-sm) {
+  .note {
+    display: none;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 4px 2px 2px;
+}
+
+.button {
+  @include win-button;
+}

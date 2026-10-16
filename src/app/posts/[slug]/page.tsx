@@ -6,6 +6,8 @@ import { FileInfo } from "@/components/FileInfo/FileInfo";
 import { RelatedFiles } from "@/components/FileWindow/RelatedFiles";
 import { JsonLd } from "@/components/JsonLd/JsonLd";
 import { MdxContent } from "@/components/MdxContent/MdxContent";
+import { ReadingProgress } from "@/components/ReadingProgress/ReadingProgress";
+import { RecordVisit } from "@/components/Menu/RecordVisit";
 import { SeriesWindow } from "@/components/SeriesWindow/SeriesWindow";
 import { ShareBox } from "@/components/ShareBox/ShareBox";
 import { TocTree } from "@/components/TocTree/TocTree";
@@ -116,6 +118,7 @@ export default async function PostPage({ params }: Props) {
   return (
     <article className={styles.article}>
       <JsonLd data={postJsonLd(post, crumbs)} />
+      <RecordVisit slug={post.slug} title={post.title} />
       <AddressBar items={address} />
       <FileInfo post={post} />
 
@@ -127,9 +130,10 @@ export default async function PostPage({ params }: Props) {
 
       <TocTree headings={post.headings} rootName={`${post.title}.mdx`} />
 
-      <div className={styles.body}>
+      <div id="post-body" className={styles.body}>
         <MdxContent code={post.mdx} />
       </div>
+      <ReadingProgress name={`${post.title}.mdx`} minutes={post.readingMinutes} targetId="post-body" />
 
       {post.series && (
         <SeriesWindow

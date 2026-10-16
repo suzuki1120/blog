@@ -108,12 +108,15 @@ ogImage: /images/xx.png  # 任意。未指定ならタイトル入りの画像�
 
 目次は記事の h2・h3（`##`・`###`）から自動で作ります。見出しが 2 つ以上ある記事にだけ表示されます。
 
+記事の中では `<MessageBox>`・`<LinkCard>`・`<ImageViewer>`・`<Download>` を import せずに使えます。書き方は `content/posts/mdx-components.mdx` を見てください。画像は `public/images/`、配布ファイルは `public/files/` に置きます。
+
 ## 設定
 
 | 項目 | 場所 |
 | --- | --- |
 | サイト名・説明・著者・1 ページの件数 | `src/config/site.ts` |
 | プロフィールページ（`/about`）の自己紹介・リンク | `src/config/site.ts` の `profile` |
+| リンク集（`/links`）に載せるサイトとバナー | `src/config/links.ts` |
 | 本番 URL（canonical / OGP / RSS / sitemap に使用） | `src/config/site.ts` の既定値（`https://blog.kiraides.workers.dev`）。環境変数 `NEXT_PUBLIC_SITE_URL` で上書きできます |
 | Worker 名・互換性設定 | `wrangler.jsonc` |
 

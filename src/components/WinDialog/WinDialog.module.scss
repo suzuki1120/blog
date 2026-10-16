@@ -1,0 +1,59 @@
+@use "../../styles/mixins" as *;
+
+.dialog {
+  @include win-window;
+  width: min(420px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  // globals.scss の margin: 0 を打ち消し、画面の中央に置く
+  margin: auto;
+  border: 0;
+
+  &::backdrop {
+    background: oklch(0% 0 0 / 0.6);
+  }
+}
+
+.wide {
+  width: min(960px, calc(100vw - 32px));
+}
+
+.titlebar {
+  @include win-titlebar;
+}
+
+.title {
+  @include win-title-text;
+}
+
+// 飾りではなく実際に押せる「×」
+.close {
+  @include win-raised;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 18px;
+  height: 16px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  color: var(--win-ink);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+
+  &:active {
+    @include win-pressed;
+  }
+
+  &:focus-visible {
+    outline: 1px dotted var(--win-ink);
+    outline-offset: -3px;
+  }
+}
+
+.body {
+  max-height: calc(100dvh - 80px);
+  padding: 10px 8px 8px;
+  overflow: auto;
+}

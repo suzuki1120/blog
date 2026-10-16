@@ -1,0 +1,84 @@
+---
+title: 記事で使える部品の見本
+description: メッセージボックス、リンクカード、画像ビューア、ダウンロード欄の書き方と表示例です。
+date: 2026-10-16
+category: tech
+tags: [mdx]
+series: blog-build
+---
+
+記事の MDX では、Markdown のほかに次の 4 つの部品を使えます。import は不要で、タグを書くだけで表示されます。
+
+## メッセージボックス
+
+補足や注意書きを Win98 のメッセージボックスとして表示します。`type` は `info`（情報）、`warning`（警告）、`error`（エラー）の 3 種類で、省略すると `info` になります。
+
+```mdx
+<MessageBox type="warning" title="注意">
+  ここに注意書きを書きます。**太字**や [リンク](/) も使えます。
+</MessageBox>
+```
+
+<MessageBox>
+  `title` を省略すると、タイトルバーには種類の名前（情報・警告・エラー）が出ます。
+</MessageBox>
+
+<MessageBox type="warning" title="注意">
+  ここに注意書きを書きます。**太字**や [リンク](/) も使えます。
+</MessageBox>
+
+<MessageBox type="error">
+  動かない書き方や、やってはいけない操作を書くときに使います。
+</MessageBox>
+
+## リンクカード
+
+外部のページを紹介するときに、Windows のショートカット風のカードで表示します。カード全体がリンクになります。サイト内の URL（`/` から始まるもの）も使えます。
+
+```mdx
+<LinkCard
+  href="https://nextjs.org/docs"
+  title="Next.js Docs"
+  description="Next.js の公式ドキュメント"
+/>
+```
+
+<LinkCard href="https://nextjs.org/docs" title="Next.js Docs" description="Next.js の公式ドキュメント" />
+
+<LinkCard href="/posts/syntax-highlight" title="コードブロックの書き方" description="サイト内の記事へのリンクの例" />
+
+## 画像ビューア
+
+画像を画像ビューアのウィンドウに入れて表示します。画像を押すと拡大表示します。表示前に場所を確保するため、`width` と `height` には画像の実際の大きさを書きます。
+
+```mdx
+<ImageViewer
+  src="/images/sample-desktop.svg"
+  alt="Win98 風のデスクトップに、記事一覧のウィンドウが開いている画面"
+  width={640}
+  height={400}
+  caption="キャプションは省略できます"
+/>
+```
+
+<ImageViewer
+  src="/images/sample-desktop.svg"
+  alt="Win98 風のデスクトップに、記事一覧のウィンドウが開いている画面"
+  width={640}
+  height={400}
+  caption="キャプションは省略できます"
+/>
+
+## ダウンロード欄
+
+配布するファイルを WinMX の転送リスト風に表示します。ファイルは `public/files/` に置きます。
+
+```mdx
+<Download
+  href="/files/message-box-sample.mdx"
+  size="146 バイト"
+  description="この記事のメッセージボックスの書き方"
+/>
+```
+
+<Download href="/files/message-box-sample.mdx" size="146 バイト" description="この記事のメッセージボックスの書き方" />

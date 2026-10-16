@@ -1,0 +1,81 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+// 画面の右下に固定する小さなダイアログ。狭い画面では下端いっぱいに広げる
+.dialog {
+  @include win-window;
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 5;
+  width: 260px;
+
+  @include below($bp-sm) {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    width: auto;
+  }
+
+  @media print {
+    display: none;
+  }
+}
+
+.titlebar {
+  @include win-titlebar;
+}
+
+.title {
+  @include win-title-text;
+  flex: 1;
+}
+
+.close {
+  @include win-raised;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 16px;
+  height: 14px;
+  padding: 0;
+  border: 0;
+  color: var(--win-ink);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+
+  &:active {
+    @include win-pressed;
+  }
+
+  &:focus-visible {
+    outline: 1px dotted var(--win-ink);
+    outline-offset: -3px;
+  }
+}
+
+.body {
+  display: grid;
+  gap: 4px;
+  padding: 6px 6px 4px;
+}
+
+// Win98 のコピー中ダイアログと同じ、紺色の四角が並ぶ進み具合のバー
+.bar {
+  @include win-sunken;
+  height: 16px;
+  padding: 2px;
+  background: var(--win-field);
+
+  > span {
+    display: block;
+    height: 100%;
+    background: repeating-linear-gradient(90deg, var(--win-select) 0 8px, transparent 8px 10px);
+  }
+}
+
+.info {
+  font-size: 11px;
+}

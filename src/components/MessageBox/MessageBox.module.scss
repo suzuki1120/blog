@@ -1,0 +1,103 @@
+@use "../../styles/mixins" as *;
+
+.box {
+  @include win-window;
+  max-width: 560px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.titlebar {
+  @include win-titlebar;
+}
+
+.title {
+  @include win-title-text;
+}
+
+.controls {
+  @include win-controls;
+}
+
+.body {
+  display: flex;
+  gap: 12px;
+  padding: 12px 12px 10px;
+}
+
+.message {
+  display: grid;
+  gap: 0.6em;
+  min-width: 0;
+
+  a,
+  a:visited {
+    color: var(--win-title);
+  }
+
+  a:hover {
+    color: var(--win-error);
+  }
+
+  a:focus-visible {
+    outline: 1px dotted var(--win-ink);
+  }
+
+  ul,
+  ol {
+    padding-left: 1.4em;
+  }
+
+  // 記事本文の強調（黄色）は灰色の地では読みにくいので、太字だけにする。
+  // 本文側の指定（.body strong）より優先させるため .box から書く
+  .box & strong {
+    color: inherit;
+  }
+}
+
+// Win98 のアイコン（情報: 青い丸に i、警告: 黄色い三角に !、エラー: 赤い丸に ×）
+.icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  font-family: "Times New Roman", serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.info {
+  border: 1px solid var(--win-dark);
+  border-radius: 50%;
+  background: var(--win-title-2);
+  color: var(--win-light);
+}
+
+// 三角形の縁取りは clip-path では描けないため、黒い三角の上に一回り小さい黄色の三角を重ねる
+.warning {
+  position: relative;
+  padding-top: 9px;
+  background: var(--win-dark);
+  color: var(--win-ink);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  isolation: isolate;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color-yellow);
+    clip-path: polygon(50% 7%, 95% 95%, 5% 95%);
+  }
+}
+
+.error {
+  border: 1px solid var(--win-dark);
+  border-radius: 50%;
+  background: var(--win-error);
+  color: var(--win-light);
+  font-family: var(--font-ui);
+}

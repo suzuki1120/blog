@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { WinDialog } from "@/components/WinDialog/WinDialog";
 import { normalizeForSearch, type FileRow, type SearchRow } from "@/lib/file-row";
-import { FileTable } from "./FileTable";
+import { createLocalStore } from "@/lib/local-store";
+import { FileIcons } from "./FileIcons";
+import { FileTable, type Sort, type SortKey } from "./FileTable";
 import styles from "./FileWindow.module.scss";
 
 type Pager = {
@@ -31,15 +34,68 @@ type IndexState =
   | { status: "error" }
   | { status: "ready"; rows: SearchRow[] };
 
+type View = "details" | "list" | "icons";
+
+const views: { key: View; label: string }[] = [
+  { key: "details", label: "詳細" },
+  { key: "list", label: "一覧" },
+  { key: "icons", label: "アイコン" },
+];
+
+// 表示形式と、1 文字のショートカットを使うかどうかは閲覧者ごとに保存する
+const viewStore = createLocalStore<View>("blog:view", "details", (v) =>
+  v === "list" || v === "icons" ? v : "details",
+);
+const shortcutStore = createLocalStore("blog:shortcuts", true, (v) => v !== false);
+
 const noop = () => () => {};
+
+// 一覧の元の並び（日付の新しい順）を初期状態とする
+const defaultSort: Sort = { key: "date", dir: "desc" };
+
+function sortRows<T extends FileRow>(rows: T[], sort: Sort): T[] {
+  const sign = sort.dir === "asc" ? 1 : -1;
+  return rows
+    .map((row, i) => ({ row, i }))
+    .sort((a, b) => {
+      const x = a.row;
+      const y = b.row;
+      const diff =
+        sort.key === "size"
+          ? x.bytes - y.bytes
+          : sort.key === "name"
+            ? x.name.localeCompare(y.name, "ja")
+            : x[sort.key] < y[sort.key]
+              ? -1
+              : x[sort.key] > y[sort.key]
+                ? 1
+                : 0;
+      // 同じ値のときは元の順番を保つ
+      return diff * sign || a.i - b.i;
+    })
+    .map(({ row }) => row);
+}
+
+function isTyping(target: EventTarget | null): boolean {
+  return (
+    target instanceof HTMLElement &&
+    (target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName))
+  );
+}
 
 /** WinMX / Winny の検索結果ウィンドウ風の記事一覧。検索欄に入力すると全記事から絞り込む */
 export function FileWindow({ title, rows, total, totalSize, pager }: Props) {
-  // JS が動くまで検索欄は使えないので disabled にしておく
+  // JS が動くまで検索欄・並べ替え・表示切り替えは使えないので disabled にしておく
   const hydrated = useSyncExternalStore(noop, () => true, () => false);
+  const view = viewStore.useValue();
+  const shortcuts = shortcutStore.useValue();
   const [query, setQuery] = useState("");
   const [index, setIndex] = useState<IndexState>({ status: "idle" });
+  const [sort, setSort] = useState<Sort>(defaultSort);
+  const [helpOpen, setHelpOpen] = useState(false);
   const requested = useRef(false);
+  const windowRef = useRef<HTMLElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
 
   // 検索用の一覧は、検索欄を初めて使うときに 1 回だけ取得する
   function loadIndex() {
@@ -58,6 +114,11 @@ export function FileWindow({ title, rows, total, totalSize, pager }: Props) {
       });
   }
 
+  // 同じ列なら昇順・降順を切り替え、別の列なら昇順から始める
+  function changeSort(key: SortKey) {
+    setSort((prev) => (prev.key === key ? { key, dir: prev.dir === "asc" ? "desc" : "asc" } : { key, dir: "asc" }));
+  }
+
   const terms = useMemo(() => normalizeForSearch(query).split(/\s+/).filter(Boolean), [query]);
   const searching = terms.length > 0;
   const results = useMemo(() => {
@@ -67,6 +128,41 @@ export function FileWindow({ title, rows, total, totalSize, pager }: Props) {
       return terms.every((term) => haystack.includes(term));
     });
   }, [index, searching, terms]);
+
+  // キーボード操作。1 文字のキーはヘルプから無効にできる（入力中・他のダイアログ表示中は反応しない）
+  useEffect(() => {
+    function moveFocus(step: 1 | -1) {
+      const links = [...(windowRef.current?.querySelectorAll<HTMLElement>("[data-file-link]") ?? [])];
+      if (links.length === 0) return;
+      const current = links.indexOf(document.activeElement as HTMLElement);
+      const next = current === -1 ? (step === 1 ? 0 : links.length - 1) : current + step;
+      links[Math.min(Math.max(next, 0), links.length - 1)].focus();
+    }
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.ctrlKey || e.metaKey || e.altKey || e.defaultPrevented) return;
+      // 一覧の中にフォーカスがあるときは矢印キーでも移動できる
+      if ((e.key === "ArrowDown" || e.key === "ArrowUp") && e.target instanceof HTMLElement && e.target.matches("[data-file-link]")) {
+        e.preventDefault();
+        moveFocus(e.key === "ArrowDown" ? 1 : -1);
+        return;
+      }
+      if (!shortcuts || isTyping(e.target) || document.querySelector("dialog[open]")) return;
+      if (e.key === "/") {
+        e.preventDefault();
+        searchRef.current?.focus();
+      } else if (e.key === "j" || e.key === "k") {
+        e.preventDefault();
+        moveFocus(e.key === "j" ? 1 : -1);
+      } else if (e.key === "?") {
+        e.preventDefault();
+        setHelpOpen(true);
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [shortcuts]);
 
   let heading = title;
   let status = `${total} 個のオブジェクト`;
@@ -84,8 +180,18 @@ export function FileWindow({ title, rows, total, totalSize, pager }: Props) {
     }
   }
 
+  const shown = sortRows(searching ? results : rows, sort);
+  const empty = searching ? emptyText : "ファイルはまだありません。";
+  // JS が動く前は、サーバーで描いた詳細表示のままにする
+  const currentView = hydrated ? view : "details";
+
   return (
-    <section className={styles.window} aria-labelledby="file-window-title">
+    <section
+      ref={windowRef}
+      className={`${styles.window} ${index.status === "loading" ? styles.busy : ""}`}
+      aria-labelledby="file-window-title"
+      aria-busy={index.status === "loading"}
+    >
       <div className={styles.titlebar}>
         <span className={styles.icon} aria-hidden="true" />
         <h1 id="file-window-title" className={styles.title}>
@@ -103,6 +209,7 @@ export function FileWindow({ title, rows, total, totalSize, pager }: Props) {
           検索:
         </label>
         <input
+          ref={searchRef}
           id="file-search"
           type="search"
           className={styles.field}
@@ -121,10 +228,30 @@ export function FileWindow({ title, rows, total, totalSize, pager }: Props) {
         />
       </form>
 
-      {searching ? (
-        <FileTable rows={results} empty={emptyText} />
+      <div className={styles.toolbar}>
+        <div role="group" aria-label="表示形式" className={styles.viewButtons}>
+          {views.map((v) => (
+            <button
+              key={v.key}
+              type="button"
+              className={styles.toolButton}
+              aria-pressed={currentView === v.key}
+              disabled={!hydrated}
+              onClick={() => viewStore.write(v.key)}
+            >
+              {v.label}
+            </button>
+          ))}
+        </div>
+        <button type="button" className={styles.toolButton} disabled={!hydrated} onClick={() => setHelpOpen(true)}>
+          ヘルプ(H)
+        </button>
+      </div>
+
+      {currentView === "details" ? (
+        <FileTable rows={shown} empty={empty} sort={sort} onSort={hydrated ? changeSort : undefined} />
       ) : (
-        <FileTable rows={rows} empty="ファイルはまだありません。" />
+        <FileIcons rows={shown} mode={currentView} empty={empty} />
       )}
 
       <p className={styles.status} aria-live="polite">
@@ -157,6 +284,56 @@ export function FileWindow({ title, rows, total, totalSize, pager }: Props) {
           )}
         </nav>
       )}
+
+      <WinDialog open={helpOpen} onClose={() => setHelpOpen(false)} title="ヘルプ - キーボード操作">
+        <dl className={styles.keys}>
+          <div>
+            <dt>
+              <kbd>/</kbd>
+            </dt>
+            <dd>検索欄へ移動</dd>
+          </div>
+          <div>
+            <dt>
+              <kbd>j</kbd> / <kbd>k</kbd>
+            </dt>
+            <dd>次 / 前のファイルを選ぶ</dd>
+          </div>
+          <div>
+            <dt>
+              <kbd>↓</kbd> / <kbd>↑</kbd>
+            </dt>
+            <dd>ファイルを選んでいるときに、次 / 前へ移動</dd>
+          </div>
+          <div>
+            <dt>
+              <kbd>Enter</kbd>
+            </dt>
+            <dd>選んだファイルを開く</dd>
+          </div>
+          <div>
+            <dt>
+              <kbd>Esc</kbd>
+            </dt>
+            <dd>検索語を消す（検索欄で）／このヘルプを閉じる</dd>
+          </div>
+          <div>
+            <dt>
+              <kbd>?</kbd>
+            </dt>
+            <dd>このヘルプを開く</dd>
+          </div>
+        </dl>
+        <label className={styles.check}>
+          <input type="checkbox" checked={shortcuts} onChange={(e) => shortcutStore.write(e.target.checked)} />
+          1 文字のキー（/ j k ?）で操作する
+        </label>
+        <p className={styles.dialogActions}>
+          <button type="button" className={styles.button} onClick={() => setHelpOpen(false)}>
+            OK
+          </button>
+        </p>
+      </WinDialog>
     </section>
   );
 }

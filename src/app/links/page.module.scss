@@ -1,0 +1,111 @@
+@use "../../styles/mixins" as *;
+
+.page {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.heading {
+  color: var(--color-neon);
+  font-size: clamp(1.25rem, 4.5vw, 1.75rem);
+  text-shadow: 0 0 8px currentColor;
+}
+
+.box {
+  @include ug-box;
+  display: grid;
+  gap: 10px;
+}
+
+.boxHeading {
+  @include ug-box-heading;
+  margin-bottom: 0;
+}
+
+// バナーを横に並べ、下に一言の説明を付ける（当時のリンク集の並べ方）
+.sites {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 18px;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: grid;
+    gap: 4px;
+    justify-items: start;
+    width: 128px;
+  }
+}
+
+.bannerLink {
+  display: block;
+  line-height: 0;
+}
+
+.banner {
+  width: 88px;
+  height: 31px;
+  image-rendering: pixelated;
+}
+
+// 画像のないサイトは、同じ大きさの文字のバナーにする
+.textBanner {
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 31px;
+  padding-inline: 2px;
+  overflow: hidden;
+  border: 1px solid var(--color-neon-dim);
+  background: var(--color-paper);
+  color: var(--color-neon);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.description {
+  color: var(--color-ink-2);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.info {
+  display: grid;
+  gap: 4px;
+
+  > div {
+    display: grid;
+    grid-template-columns: 5.5em minmax(0, 1fr);
+    gap: 8px;
+    align-items: center;
+  }
+
+  dt {
+    color: var(--color-neon);
+    font-family: var(--font-pixel);
+  }
+
+  dd {
+    overflow-wrap: anywhere;
+  }
+}
+
+.snippet {
+  display: grid;
+  gap: 6px;
+  justify-items: end;
+
+  pre {
+    justify-self: stretch;
+    overflow-x: auto;
+    padding: 8px 10px;
+    border: 1px dashed var(--color-rule);
+    background: var(--color-code-bg);
+    color: var(--color-neon);
+    font-size: 12px;
+  }
+}
