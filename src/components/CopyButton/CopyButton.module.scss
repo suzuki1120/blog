@@ -1,0 +1,19 @@
+@use "../../styles/mixins" as *;
+
+.button {
+  @include win-button;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+
+  // JS が動く前は Win98 の無効なボタンの文字（彫り込み）にする
+  &:disabled {
+    color: var(--win-shadow);
+    text-shadow: 1px 1px 0 var(--win-light);
+    cursor: default;
+
+    &:active {
+      @include win-raised;
+    }
+  }
+}

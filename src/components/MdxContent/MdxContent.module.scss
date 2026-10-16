@@ -17,6 +17,22 @@
     scroll-margin-top: 16px;
   }
 
+  // 見出しの後ろの「#」。タッチ操作でも見えるよう常に表示し、色を抑える
+  .anchor {
+    margin-left: 0.4em;
+    color: var(--color-neon-dim);
+    font-size: 0.85em;
+    text-decoration: none;
+
+    &:visited {
+      color: var(--color-neon-dim);
+    }
+
+    &:hover {
+      color: var(--color-hover);
+    }
+  }
+
   h2 {
     margin-top: 2.25em;
     padding: 0.2em 0.6em;
@@ -117,33 +133,68 @@
     font-size: 0.875em;
   }
 
-  // ---- コードブロック（rehype-pretty-code） ----
-  figure[data-rehype-pretty-code-figure] {
+  // ---- コードブロック（rehype-pretty-code）。MdxContent.tsx の Figure で Win98 のウィンドウにする ----
+  .codeWindow {
+    @include win-window;
     margin-inline: 0;
   }
 
-  [data-rehype-pretty-code-title] {
-    display: inline-block;
-    padding: 0.3em 0.9em;
-    border: 1px solid var(--color-rule);
-    border-bottom: 0;
-    background: var(--color-panel);
-    color: var(--color-ink-2);
-    font-family: var(--font-mono);
-    font-size: 0.8125rem;
+  .codeTitlebar {
+    @include win-titlebar;
+    padding-block: 1px;
+  }
 
-    + pre {
-      margin-top: 0;
-    }
+  .codeTitle {
+    @include win-title-text;
+    flex: 1;
+  }
+
+  .copy {
+    flex-shrink: 0;
+    min-width: 0;
+    min-height: 18px;
+    padding: 0 8px;
+    font-size: 11px;
+    font-weight: 400;
+  }
+
+  // メモ帳のアイコン（青い背表紙の白いノート）
+  .notepadIcon {
+    flex-shrink: 0;
+    width: 12px;
+    height: 13px;
+    border: 1px solid var(--win-dark);
+    background:
+      repeating-linear-gradient(180deg, transparent 0 2px, var(--win-shadow) 2px 3px) 4px 2px / 6px 9px no-repeat,
+      linear-gradient(90deg, var(--win-title-2) 3px, var(--win-field) 3px);
+  }
+
+  // MS-DOS プロンプトのアイコン（黒い画面に C:\）
+  .dosIcon {
+    flex-shrink: 0;
+    width: 14px;
+    height: 11px;
+    border: 1px solid var(--win-face);
+    background: linear-gradient(90deg, var(--win-light) 2px 4px, transparent 4px) 0 6px / 100% 1px no-repeat var(--win-dark);
   }
 
   pre {
     overflow-x: auto;
+    margin: 2px 0 0;
     padding-block: 1em;
-    border: 1px dashed var(--color-rule);
     background: var(--color-code-bg);
+    // ウィンドウの文字色（黒）を引き継がないよう戻す
+    color: var(--color-ink);
     font-size: 0.875rem;
     line-height: 1.7;
+    box-shadow:
+      inset 1px 1px var(--win-shadow),
+      inset -1px -1px var(--win-light);
+
+    &:focus-visible {
+      outline: 1px dotted var(--color-ink);
+      outline-offset: -3px;
+    }
   }
 
   pre > code {

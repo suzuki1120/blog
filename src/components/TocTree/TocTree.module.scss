@@ -1,0 +1,85 @@
+@use "../../styles/mixins" as *;
+
+.window {
+  @include win-window;
+  max-width: 480px;
+}
+
+.titlebar {
+  @include win-titlebar;
+}
+
+.titleIcon {
+  @include folder-icon;
+}
+
+.title {
+  @include win-title-text;
+}
+
+.controls {
+  @include win-controls;
+}
+
+.pane {
+  @include win-pane;
+  line-height: 18px;
+}
+
+.root {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.fileIcon {
+  @include file-icon;
+}
+
+.folderIcon {
+  @include folder-icon;
+}
+
+// 点線でつないだツリー。縦線は最後の子以外で下まで伸ばす
+.tree,
+.tree ol {
+  padding: 0;
+  list-style: none;
+}
+
+.tree li {
+  position: relative;
+  display: block;
+  padding-left: 18px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 5px;
+    width: 10px;
+    height: 9px;
+    border-bottom: 1px dotted var(--win-shadow);
+    border-left: 1px dotted var(--win-shadow);
+  }
+
+  &:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 9px;
+    bottom: 0;
+    left: 5px;
+    border-left: 1px dotted var(--win-shadow);
+  }
+
+  > span {
+    margin-right: 4px;
+  }
+
+  a {
+    @include win-pane-link;
+    overflow-wrap: anywhere;
+  }
+}

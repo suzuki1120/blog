@@ -1,0 +1,61 @@
+@use "../../styles/mixins" as *;
+
+.window {
+  @include win-window;
+  max-width: 480px;
+}
+
+.titlebar {
+  @include win-titlebar;
+}
+
+.title {
+  @include win-title-text;
+}
+
+.controls {
+  @include win-controls;
+}
+
+.body {
+  display: grid;
+  gap: 8px;
+  padding: 8px 6px 6px;
+}
+
+.url {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.label {
+  flex-shrink: 0;
+}
+
+// 読み取り専用の入力欄の見た目。長い URL は … で省略する
+.field {
+  @include win-sunken;
+  flex: 1;
+  min-width: 0;
+  padding: 2px 6px;
+  overflow: hidden;
+  background: var(--win-field);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0;
+  list-style: none;
+}
+
+.button {
+  @include win-button;
+}

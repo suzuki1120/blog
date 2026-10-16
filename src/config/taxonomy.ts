@@ -18,8 +18,15 @@ export const tags = {
   tips: "Tips",
 } as const;
 
+// 連載。記事の frontmatter に `series: スラッグ` を書くと、同じシリーズの記事を日付の古い順に並べる
+export const series = {
+  "blog-build": "ブログ構築記",
+} as const;
+
 export type CategorySlug = keyof typeof categories;
 export type TagSlug = keyof typeof tags;
+export type SeriesSlug = keyof typeof series;
 
 export const categorySlugs = Object.keys(categories) as [CategorySlug, ...CategorySlug[]];
 export const tagSlugs = Object.keys(tags) as [TagSlug, ...TagSlug[]];
+export const seriesSlugs = Object.keys(series) as [SeriesSlug, ...SeriesSlug[]];

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { categories, tags } from "@/config/taxonomy";
+import { categories, series, tags } from "@/config/taxonomy";
 import { fileHash, fileName, formatSize, formatSlashDate } from "@/lib/files";
 import type { Post } from "@/lib/posts";
 import styles from "./FileInfo.module.scss";
@@ -50,6 +50,14 @@ export function FileInfo({ post }: { post: Post }) {
             <dt>更新日時</dt>
             <dd>
               <time dateTime={post.updated}>{formatSlashDate(post.updated)}</time>
+            </dd>
+          </div>
+        )}
+        {post.series && (
+          <div>
+            <dt>連載</dt>
+            <dd>
+              <Link href={`/series/${post.series}`}>{series[post.series]}</Link>
             </dd>
           </div>
         )}

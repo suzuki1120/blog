@@ -28,18 +28,22 @@ date: 2026-10-08
 updated: 2026-10-10      # 任意
 category: tech           # src/config/taxonomy.ts の categories のキー
 tags: [nextjs, tips]     # src/config/taxonomy.ts の tags のキー
+series: blog-build       # 任意。src/config/taxonomy.ts の series のキー（連載は日付の古い順に並ぶ）
 draft: true              # 任意。true の間は本番に出ない
 ogImage: /images/xx.png  # 任意。未指定ならタイトル入りの画像を自動生成
 ---
 ```
 
-カテゴリ・タグを増やすときは `src/config/taxonomy.ts` に「スラッグ: 表示名」を追加します。未定義の値を書くとビルドエラーになります。
+カテゴリ・タグ・連載を増やすときは `src/config/taxonomy.ts` に「スラッグ: 表示名」を追加します。未定義の値を書くとビルドエラーになります。
+
+目次は記事の h2・h3（`##`・`###`）から自動で作ります。見出しが 2 つ以上ある記事にだけ表示されます。
 
 ## 設定
 
 | 項目 | 場所 |
 | --- | --- |
 | サイト名・説明・著者・1 ページの件数 | `src/config/site.ts` |
+| プロフィールページ（`/about`）の自己紹介・リンク | `src/config/site.ts` の `profile` |
 | 本番 URL（canonical / OGP / RSS / sitemap に使用） | `src/config/site.ts` の既定値（`https://blog.kiraides.workers.dev`）。環境変数 `NEXT_PUBLIC_SITE_URL` で上書きできます |
 | Worker 名・互換性設定 | `wrangler.jsonc` |
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getUsedCategories, getUsedTags } from "@/lib/posts";
+import { getUsedCategories, getUsedSeries, getUsedTags } from "@/lib/posts";
 import styles from "./Menu.module.scss";
 
 /** 旧フレームサイト風の左メニュー */
@@ -16,6 +16,12 @@ export function Menu() {
           </li>
           <li>
             <Link href="/tags">フォルダ一覧</Link>
+          </li>
+          <li>
+            <Link href="/archives">過去ログ</Link>
+          </li>
+          <li>
+            <Link href="/about">プロフィール</Link>
           </li>
           <li>
             <a href="/feed.xml">RSS</a>
@@ -37,6 +43,23 @@ export function Menu() {
           ))}
         </ul>
       </nav>
+
+      {getUsedSeries().length > 0 && (
+        <nav aria-labelledby="menu-series" className={`${styles.box} ${styles.folders}`}>
+          <h2 id="menu-series" className={styles.heading}>
+            連載
+          </h2>
+          <ul className={styles.folderList}>
+            {getUsedSeries().map((s) => (
+              <li key={s.slug}>
+                <span className={styles.folderIcon} aria-hidden="true" />
+                <Link href={`/series/${s.slug}`}>{s.name}</Link>
+                <span className={styles.count}>({s.count})</span>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
 
       <nav aria-labelledby="menu-tags" className={`${styles.box} ${styles.folders}`}>
         <h2 id="menu-tags" className={styles.heading}>

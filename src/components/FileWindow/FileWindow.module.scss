@@ -134,13 +134,8 @@
 
 // 書類アイコン（右上を折った白い紙）
 .fileIcon {
-  display: inline-block;
-  width: 10px;
-  height: 12px;
+  @include file-icon;
   margin-right: 6px;
-  border: 1px solid var(--win-shadow);
-  background: linear-gradient(225deg, var(--win-face) 3px, var(--win-field) 3px);
-  vertical-align: -1px;
 }
 
 .size,

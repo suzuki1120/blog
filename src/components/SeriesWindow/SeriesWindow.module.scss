@@ -1,0 +1,75 @@
+@use "../../styles/mixins" as *;
+
+.window {
+  @include win-window;
+}
+
+.titlebar {
+  @include win-titlebar;
+}
+
+.icon {
+  @include folder-icon;
+}
+
+.title {
+  @include win-title-text;
+}
+
+.controls {
+  @include win-controls;
+}
+
+.pane {
+  @include win-pane;
+  display: grid;
+  gap: 2px;
+  list-style: none;
+
+  li {
+    display: grid;
+    grid-template-columns: 4.5em minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  a {
+    @include win-pane-link;
+    justify-self: start;
+    overflow-wrap: anywhere;
+  }
+}
+
+.number {
+  color: var(--win-ink-2);
+  white-space: nowrap;
+}
+
+// 現在の記事は Windows の選択行の色
+.current {
+  justify-self: start;
+  padding-inline: 2px;
+  background: var(--win-select);
+  color: var(--win-on-select);
+  overflow-wrap: anywhere;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 12px;
+  padding: 6px 4px 5px;
+}
+
+.button {
+  @include win-button;
+}
+
+.disabled {
+  color: var(--win-shadow);
+  text-shadow: 1px 1px 0 var(--win-light);
+
+  &:hover {
+    color: var(--win-shadow);
+  }
+}

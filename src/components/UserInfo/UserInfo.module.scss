@@ -1,0 +1,105 @@
+@use "../../styles/mixins" as *;
+
+.window {
+  @include win-window;
+  max-width: 560px;
+}
+
+.titlebar {
+  @include win-titlebar;
+}
+
+.title {
+  @include win-title-text;
+}
+
+.controls {
+  @include win-controls;
+}
+
+// 人のアイコン（頭と肩）
+.userIcon {
+  flex-shrink: 0;
+  width: 12px;
+  height: 13px;
+  background:
+    radial-gradient(circle at 6px 4px, var(--color-yellow) 3px, transparent 3.5px),
+    radial-gradient(ellipse 6px 5px at 6px 13px, var(--color-cyan) 99%, transparent);
+}
+
+.body {
+  display: grid;
+  gap: 10px;
+  padding: 10px 8px 6px;
+}
+
+// Win98 のグループボックス（細い溝の枠と見出し）
+.group {
+  min-width: 0;
+  padding: 6px 10px 8px;
+  border: 0;
+  box-shadow:
+    inset 1px 1px var(--win-shadow),
+    inset -1px -1px var(--win-light),
+    inset 2px 2px var(--win-light),
+    inset -2px -2px var(--win-shadow);
+
+  legend {
+    padding-inline: 3px;
+  }
+}
+
+.props {
+  display: grid;
+  gap: 4px;
+
+  > div {
+    display: grid;
+    grid-template-columns: 7.5em minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  dt {
+    color: var(--win-ink-2);
+  }
+
+  dd {
+    overflow-wrap: anywhere;
+  }
+
+  a,
+  a:visited {
+    color: var(--win-title);
+  }
+
+  a:hover {
+    color: var(--win-error);
+  }
+
+  a:focus-visible {
+    outline: 1px dotted var(--win-ink);
+  }
+}
+
+.inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 12px;
+  padding: 0;
+  list-style: none;
+
+  li {
+    white-space: nowrap;
+  }
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.button {
+  @include win-button;
+}

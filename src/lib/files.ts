@@ -48,6 +48,17 @@ export function totalSize(posts: Post[]): string {
   return formatSize(posts.reduce((sum, post) => sum + post.byteSize, 0));
 }
 
+/** ページ送りのない一覧（シリーズ・月別）の FileWindow に渡す値。rows は渡した順のまま並べる */
+export function allFilesWindowProps(posts: Post[], label: string) {
+  return {
+    title: `${label} - ${posts.length} 件`,
+    rows: posts.map(toFileRow),
+    total: posts.length,
+    totalSize: totalSize(posts),
+    pager: { currentPage: 1, totalPages: 1, perPage: posts.length },
+  };
+}
+
 /**
  * 一覧ページ（トップ・カテゴリ・タグ）の FileWindow に渡す値を作る。
  * ページ番号が範囲外なら undefined（呼び出し側で notFound にする）

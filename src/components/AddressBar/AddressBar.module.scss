@@ -1,0 +1,69 @@
+@use "../../styles/mixins" as *;
+
+// ツールバーの帯に、ラベルと白い入力欄風の枠を並べる
+.bar {
+  @include win-raised;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 3px 4px 3px 6px;
+  color: var(--win-ink);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.label {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.field {
+  @include win-sunken;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0;
+  padding: 1px 6px;
+  background: var(--win-field);
+  list-style: none;
+  white-space: nowrap;
+
+  li {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+  }
+
+  li + li::before {
+    content: "\\";
+    padding-inline: 1px;
+  }
+
+  // 長い記事名は … で省略する（全文は h1 にある）
+  li:last-child {
+    flex-shrink: 1;
+    min-width: 0;
+
+    > span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  a {
+    @include win-pane-link;
+    padding-inline: 1px;
+  }
+}
+
+// ハードディスクのアイコン（灰色の箱と緑のランプ）
+.drive {
+  flex-shrink: 0;
+  width: 14px;
+  height: 8px;
+  margin-right: 4px;
+  border: 1px solid var(--win-dark);
+  background: linear-gradient(90deg, var(--win-face) 9px, var(--color-neon-dim) 9px 11px, var(--win-face) 11px);
+}

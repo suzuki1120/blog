@@ -153,6 +153,47 @@
   vertical-align: -1px;
 }
 
+// 書類アイコン（右上を折った白い紙。CSS のみ）
+@mixin file-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 10px;
+  height: 12px;
+  border: 1px solid var(--win-shadow);
+  background: linear-gradient(225deg, var(--win-face) 3px, var(--win-field) 3px);
+  vertical-align: -1px;
+}
+
+// ウィンドウ内の白い凹んだ領域（リスト・ツリー）
+@mixin win-pane {
+  @include win-sunken;
+  margin: 2px 4px;
+  padding: 6px 8px;
+  background: var(--win-field);
+}
+
+// 白い領域の中のリンク。ホバーとフォーカスで Windows の選択色にする
+@mixin win-pane-link {
+  padding-inline: 2px;
+  text-decoration: none;
+
+  &,
+  &:visited {
+    color: var(--win-ink);
+  }
+
+  &:hover,
+  &:focus-visible {
+    background: var(--win-select);
+    color: var(--win-on-select);
+  }
+
+  &:focus-visible {
+    outline: 1px dotted var(--win-ink);
+    outline-offset: 0;
+  }
+}
+
 // ---- Warez サイト風の部品 ----
 
 // 黒地に緑の二重線で囲んだ箱
