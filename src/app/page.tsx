@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { FileWindow } from "@/components/FileWindow/FileWindow";
+import { WhatsNew } from "@/components/WhatsNew/WhatsNew";
 import { alternates } from "@/lib/metadata";
 import { fileWindowProps } from "@/lib/files";
 import { getAllPosts } from "@/lib/posts";
@@ -9,5 +10,10 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return <FileWindow {...fileWindowProps(getAllPosts(), 1, "/")!} />;
+  return (
+    <>
+      <FileWindow {...fileWindowProps(getAllPosts(), 1, "/")!} />
+      <WhatsNew />
+    </>
+  );
 }

@@ -69,41 +69,6 @@
   }
 }
 
-// ---- What's New!（更新履歴） ----
-.updates {
-  display: grid;
-  gap: 6px;
-  padding: 0;
-  list-style: none;
-  font-size: 12px;
-  line-height: 1.5;
-
-  a {
-    overflow-wrap: anywhere;
-  }
-}
-
-.updateDate {
-  margin-right: 4px;
-  color: var(--color-neon);
-  font-family: var(--font-pixel);
-}
-
-.updateKind {
-  margin-right: 4px;
-  color: var(--color-ink-2);
-}
-
-.new {
-  margin-left: 4px;
-  color: var(--color-red);
-  font-family: var(--font-pixel);
-  font-size: 11px;
-  white-space: nowrap;
-
-  @include ug-blink;
-}
-
 // ---- 最近使ったファイル ----
 .recentList {
   display: grid;

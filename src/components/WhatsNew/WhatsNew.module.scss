@@ -1,0 +1,55 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.box {
+  @include ug-box;
+}
+
+.heading {
+  @include ug-box-heading;
+}
+
+// 日付・種類・タイトルを 1 行に並べる。幅が足りないときはタイトルだけ折り返す
+.updates {
+  display: grid;
+  gap: 4px;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  line-height: 1.5;
+
+  li {
+    display: flex;
+    gap: 8px;
+    min-width: 0;
+  }
+}
+
+.date {
+  flex-shrink: 0;
+  color: var(--color-neon);
+  font-family: var(--font-pixel);
+}
+
+.kind {
+  flex-shrink: 0;
+  color: var(--color-ink-2);
+}
+
+.title {
+  min-width: 0;
+
+  a {
+    overflow-wrap: anywhere;
+  }
+}
+
+.new {
+  margin-left: 6px;
+  color: var(--color-red);
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  white-space: nowrap;
+
+  @include ug-blink;
+}

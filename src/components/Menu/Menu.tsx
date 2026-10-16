@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getUpdates, getUsedCategories, getUsedSeries, getUsedTags, isNewPost } from "@/lib/posts";
+import { getUsedCategories, getUsedSeries, getUsedTags } from "@/lib/posts";
 import styles from "./Menu.module.scss";
 import { RecentFiles } from "./RecentFiles";
 
@@ -32,24 +32,6 @@ export function Menu() {
           </li>
         </ul>
       </nav>
-
-      <section aria-labelledby="menu-updates" className={`${styles.box} ${styles.folders}`}>
-        <h2 id="menu-updates" className={styles.heading}>
-          What&apos;s New!
-        </h2>
-        <ul className={styles.updates}>
-          {getUpdates().map(({ post, date, kind }) => (
-            <li key={`${post.slug}-${kind}`}>
-              <time dateTime={date} className={styles.updateDate}>
-                {date.slice(5).replace("-", "/")}
-              </time>
-              <span className={styles.updateKind}>[{kind}]</span>
-              <Link href={`/posts/${post.slug}`}>{post.title}</Link>
-              {isNewPost(date) && <span className={styles.new}>NEW!</span>}
-            </li>
-          ))}
-        </ul>
-      </section>
 
       <RecentFiles />
 
