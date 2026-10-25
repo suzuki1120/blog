@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>記事エディタ</title>
+<style>
+  :root {
+    --bg: #111; --panel: #1a1d1a; --line: #2f3a2f; --ink: #e2e2e2; --ink-2: #9a9a9a;
+    --neon: #6cf56c; --neon-dim: #2f7a2f; --red: #ff6a5c; --yellow: #ffd866;
+    --field: #0c0c0c; --font-ui: -apple-system, "Hiragino Sans", "Helvetica Neue", sans-serif;
+    --font-mono: "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { background: var(--bg); color: var(--ink); font: 14px/1.6 var(--font-ui); display: grid; grid-template-columns: 280px 1fr; grid-template-rows: 100vh; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { background: #262a26; border: 1px solid var(--line); border-radius: 4px; padding: 6px 12px; cursor: pointer; }
+  button:hover { border-color: var(--neon-dim); }
+  button.primary { background: var(--neon-dim); border-color: var(--neon); color: #fff; }
+  button:disabled { opacity: .5; cursor: default; }
+  input[type=text], input[type=date], select, textarea { background: var(--field); border: 1px solid var(--line); border-radius: 4px; padding: 6px 8px; width: 100%; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--neon-dim); outline-offset: 0; }
+  label { display: block; color: var(--ink-2); font-size: 12px; margin-bottom: 2px; }
+  code { font-family: var(--font-mono); color: var(--yellow); font-size: 12px; }
+
+  /* 左: 記事一覧と公開 */
+  aside { border-right: 1px solid var(--line); background: var(--panel); display: flex; flex-direction: column; min-height: 0; }
+  aside header { padding: 12px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+  aside h1 { font-size: 14px; margin: 0; color: var(--neon); }
+  #list { list-style: none; margin: 0; padding: 0; overflow: auto; flex: 1; }
+  #list li { padding: 8px 12px; border-bottom: 1px solid var(--line); cursor: pointer; }
+  #list li:hover { background: #222622; }
+  #list li.active { background: #243024; border-left: 3px solid var(--neon); }
+  #list .t { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #list .m { font-size: 11px; color: var(--ink-2); font-family: var(--font-mono); }
+  .badge { font-size: 10px; padding: 0 5px; border-radius: 3px; background: var(--red); color: #fff; margin-left: 6px; vertical-align: middle; }
+  .badge.changed { background: var(--yellow); color: #000; }
+  #publish { border-top: 1px solid var(--line); padding: 12px; }
+  #publish h2 { font-size: 12px; margin: 0 0 6px; color: var(--ink-2); font-weight: normal; }
+  #changes { font-family: var(--font-mono); font-size: 11px; margin: 0 0 8px; padding: 0; list-style: none; max-height: 90px; overflow: auto; }
+  #changes li { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #publish .row { display: flex; gap: 6px; margin-top: 6px; }
+  #gitlog { font-family: var(--font-mono); font-size: 11px; color: var(--ink-2); white-space: pre-wrap; margin: 6px 0 0; max-height: 120px; overflow: auto; }
+
+  /* 右: 編集 */
+  main { display: flex; flex-direction: column; min-height: 0; }
+  main.hidden > * { display: none; }
+  main.hidden::before { content: "左の一覧から記事を選ぶか、「新規」を押してください。"; margin: auto; color: var(--ink-2); }
+  .toolbar { display: flex; gap: 8px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--panel); }
+  .toolbar .spacer { flex: 1; }
+  #status { font-size: 12px; color: var(--ink-2); }
+  #status.ok { color: var(--neon); }
+  #status.err { color: var(--red); white-space: pre-wrap; }
+  .meta { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px 12px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .meta .c2 { grid-column: span 2; } .meta .c3 { grid-column: span 3; } .meta .c6 { grid-column: span 6; }
+  .tags { display: flex; flex-wrap: wrap; gap: 4px 12px; padding-top: 4px; }
+  .tags label, .check label { display: inline-flex; align-items: center; gap: 4px; color: var(--ink); font-size: 13px; margin: 0; cursor: pointer; }
+  .inline { display: flex; gap: 6px; align-items: center; }
+  .inline input { flex: 1; }
+  .inline button { padding: 4px 8px; font-size: 12px; white-space: nowrap; }
+  .editor { flex: 1; display: grid; grid-template-columns: 1fr; min-height: 0; }
+  .editor.split { grid-template-columns: 1fr 1fr; }
+  #body { height: 100%; resize: none; border: 0; border-radius: 0; font: 14px/1.7 var(--font-mono); padding: 14px 16px; }
+  #preview { border: 0; border-left: 1px solid var(--line); width: 100%; height: 100%; background: #000; display: none; }
+  .editor.split #preview { display: block; }
+  .hint { font-size: 11px; color: var(--ink-2); }
+</style>
+</head>
+<body>
+<aside>
+  <header>
+    <h1>記事エディタ</h1>
+    <button id="new">＋ 新規</button>
+  </header>
+  <ul id="list"></ul>
+  <section id="publish">
+    <h2>公開（git commit → push）<span id="branch" class="hint"></span></h2>
+    <ul id="changes"></ul>
+    <input type="text" id="commitMessage" placeholder="コミットメッセージ">
+    <div class="row">
+      <button id="publishBtn" class="primary">コミットして push</button>
+      <button id="refreshGit" title="状態を更新">↻</button>
+    </div>
+    <pre id="gitlog"></pre>
+  </section>
+</aside>
+
+<main id="main" class="hidden">
+  <div class="toolbar">
+    <strong id="heading"></strong>
+    <span class="spacer"></span>
+    <span id="status"></span>
+    <button id="togglePreview">プレビュー</button>
+    <button id="reloadPreview" title="プレビューを再読み込み">↻</button>
+    <button id="save" class="primary">保存 <span class="hint">⌘S</span></button>
+  </div>
+  <form class="meta" id="form" onsubmit="return false">
+    <div class="c2"><label>slug（URL になります）</label><input type="text" id="slug" placeholder="my-first-post" autocomplete="off" spellcheck="false"></div>
+    <div class="c2"><label>日付</label><input type="date" id="date"></div>
+    <div class="c2"><label>更新日（任意）</label><div class="inline"><input type="date" id="updated"><button type="button" id="updatedToday">今日</button><button type="button" id="updatedClear">消す</button></div></div>
+    <div class="c6"><label>タイトル</label><input type="text" id="title"></div>
+    <div class="c6"><label>説明文（一覧や SNS 共有で表示）</label><input type="text" id="description"></div>
+    <div class="c2"><label>カテゴリ</label><select id="category"></select></div>
+    <div class="c2"><label>タグ</label><div class="tags" id="tags"></div></div>
+    <div class="c1"><label>連載（任意）</label><select id="series"></select></div>
+    <div class="c1 check"><label>公開状態</label><label><input type="checkbox" id="draft" aria-label="下書き"> 下書き（本番に出さない）</label></div>
+    <div class="c6"><label>OG 画像のパス（任意。未指定ならタイトル入りの画像を自動生成）</label><input type="text" id="ogImage" placeholder="/images/xxx.png"></div>
+  </form>
+  <div class="editor" id="editor">
+    <textarea id="body" placeholder="本文を Markdown（MDX）で書きます。" spellcheck="false"></textarea>
+    <iframe id="preview" title="プレビュー"></iframe>
+  </div>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const state = { meta: null, posts: [], current: null, isNew: false, dirty: false };
+
+async function api(path, options = {}) {
+  const res = await fetch(path, {
+    ...options,
+    headers: { "content-type": "application/json", ...(options.headers ?? {}) },
+    body: options.body ? JSON.stringify(options.body) : undefined,
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
+  return data;
+}
+
+function setStatus(text, kind = "") {
+  $("status").textContent = text;
+  $("status").className = kind;
+}
+
+// ---- 一覧 ----
+async function loadPosts() {
+  const { posts } = await api("/api/posts");
+  state.posts = posts;
+  renderList();
+}
+
+function renderList() {
+  const changed = new Set((state.meta?.git.changes ?? []).map((c) => c.path.replace(/^content\/posts\//, "").replace(/\.mdx$/, "")));
+  $("list").innerHTML = "";
+  for (const post of state.posts) {
+    const li = document.createElement("li");
+    li.dataset.slug = post.slug;
+    if (state.current?.slug === post.slug && !state.isNew) li.className = "active";
+    const title = document.createElement("span");
+    title.className = "t";
+    title.textContent = post.title;
+    if (post.draft) title.insertAdjacentHTML("beforeend", '<span class="badge">下書き</span>');
+    if (changed.has(post.slug)) title.insertAdjacentHTML("beforeend", '<span class="badge changed">未コミット</span>');
+    const meta = document.createElement("span");
+    meta.className = "m";
+    meta.textContent = `${post.date}  ${post.slug}`;
+    li.append(title, meta);
+    li.addEventListener("click", () => openPost(post.slug));
+    $("list").append(li);
+  }
+}
+
+// ---- フォーム ----
+function renderTaxonomy() {
+  const { categories, tags, series } = state.meta.taxonomy;
+  $("category").innerHTML = Object.entries(categories).map(([slug, name]) => `<option value="${slug}">${name}（${slug}）</option>`).join("");
+  $("series").innerHTML = '<option value="">なし</option>' + Object.entries(series).map(([slug, name]) => `<option value="${slug}">${name}（${slug}）</option>`).join("");
+  $("tags").innerHTML = Object.entries(tags).map(([slug, name]) => `<label><input type="checkbox" name="tag" value="${slug}"> ${name}</label>`).join("");
+}
+
+function fillForm(post) {
+  const fm = post.frontmatter ?? {};
+  $("slug").value = post.slug ?? "";
+  $("slug").disabled = !state.isNew;
+  $("title").value = fm.title ?? "";
+  $("description").value = fm.description ?? "";
+  $("date").value = fm.date ?? state.meta.today;
+  $("updated").value = fm.updated ?? "";
+  $("category").value = fm.category ?? Object.keys(state.meta.taxonomy.categories)[0];
+  for (const box of document.querySelectorAll('input[name=tag]')) box.checked = (fm.tags ?? []).includes(box.value);
+  $("series").value = fm.series ?? "";
+  $("draft").checked = Boolean(fm.draft);
+  $("ogImage").value = fm.ogImage ?? "";
+  $("body").value = post.body ?? "";
+  $("heading").textContent = state.isNew ? "新しい記事" : `content/posts/${post.slug}.mdx`;
+  $("main").classList.remove("hidden");
+  setDirty(false);
+  setStatus("");
+  updatePreviewUrl();
+}
+
+function readForm() {
+  return {
+    slug: $("slug").value.trim(),
+    frontmatter: {
+      title: $("title").value,
+      description: $("description").value,
+      date: $("date").value,
+      updated: $("updated").value,
+      category: $("category").value,
+      tags: [...document.querySelectorAll('input[name=tag]:checked')].map((box) => box.value),
+      series: $("series").value,
+      draft: $("draft").checked,
+      ogImage: $("ogImage").value,
+    },
+    body: $("body").value,
+  };
+}
+
+function setDirty(dirty) {
+  state.dirty = dirty;
+  $("save").disabled = false;
+  if (dirty) setStatus("未保存の変更があります");
+}
+
+function confirmDiscard() {
+  return !state.dirty || confirm("保存していない変更があります。破棄しますか？");
+}
+
+async function openPost(slug) {
+  if (!confirmDiscard()) return;
+  const post = await api(`/api/posts/${encodeURIComponent(slug)}`);
+  state.current = post;
+  state.isNew = false;
+  fillForm(post);
+  renderList();
+}
+
+function newPost() {
+  if (!confirmDiscard()) return;
+  state.current = { slug: "", frontmatter: { date: state.meta.today, draft: true, tags: [] }, body: "" };
+  state.isNew = true;
+  fillForm(state.current);
+  renderList();
+  $("slug").focus();
+}
+
+async function save() {
+  const data = readForm();
+  setStatus("保存中…");
+  try {
+    const saved = state.isNew
+      ? await api("/api/posts", { method: "POST", body: data })
+      : await api(`/api/posts/${encodeURIComponent(data.slug)}`, { method: "PUT", body: data });
+    const wasNew = state.isNew;
+    state.current = saved;
+    state.isNew = false;
+    state.dirty = false;
+    $("slug").disabled = true;
+    $("heading").textContent = `content/posts/${saved.slug}.mdx`;
+    setStatus(`保存しました（${new Date().toLocaleTimeString("ja-JP")}）`, "ok");
+    await Promise.all([loadPosts(), refreshGit()]);
+    if (wasNew) $("commitMessage").value = `記事を追加: ${saved.frontmatter.title}`;
+    updatePreviewUrl();
+    if ($("editor").classList.contains("split")) reloadPreview();
+  } catch (error) {
+    setStatus(error.message, "err");
+  }
+}
+
+// ---- プレビュー（npm run dev の画面をそのまま表示） ----
+function previewUrl() {
+  const slug = $("slug").value.trim();
+  return slug ? `${state.meta.devUrl}/posts/${slug}` : state.meta.devUrl;
+}
+function updatePreviewUrl() {
+  $("togglePreview").title = previewUrl();
+}
+async function reloadPreview() {
+  // dev サーバーのポートは起動のたびに変わりうるので、毎回探し直す
+  const meta = await api("/api/meta");
+  state.meta.devUrl = meta.devUrl;
+  updatePreviewUrl();
+  if (!meta.devRunning) {
+    setStatus("プレビューには別ターミナルで npm run dev を起動してください", "err");
+    $("preview").srcdoc = "<body style='background:#000;color:#9a9a9a;font:14px sans-serif;padding:24px'>dev サーバーが見つかりません。別のターミナルで <code>npm run dev</code> を起動してから「↻」を押してください。</body>";
+    return;
+  }
+  // 保存後に content-collections が再生成するまで少し待つ
+  setTimeout(() => { $("preview").removeAttribute("srcdoc"); $("preview").src = previewUrl(); }, 800);
+}
+
+// ---- 公開 ----
+async function refreshGit() {
+  const git = await api("/api/git");
+  state.meta.git = git;
+  $("branch").textContent = ` ${git.branch}${git.ahead ? `（push 待ち ${git.ahead} 件）` : ""}`;
+  const items = git.changes.map((c) => `<li>${c.status} ${c.path.replace(/^content\/posts\//, "")}</li>`);
+  if (items.length === 0 && git.ahead === 0) items.push('<li class="hint">変更はありません</li>');
+  if (items.length === 0 && git.ahead > 0) items.push('<li class="hint">コミット済み。push だけ残っています</li>');
+  $("changes").innerHTML = items.join("");
+  $("publishBtn").disabled = git.changes.length === 0 && git.ahead === 0;
+  renderList();
+}
+
+async function publish() {
+  if (state.dirty && !confirm("保存していない変更があります。保存せずに公開しますか？")) return;
+  const message = $("commitMessage").value.trim();
+  if (!message && state.meta.git.changes.length > 0) {
+    $("gitlog").textContent = "コミットメッセージを入力してください。";
+    return;
+  }
+  $("publishBtn").disabled = true;
+  $("gitlog").textContent = "実行中…";
+  try {
+    const result = await api("/api/publish", { method: "POST", body: { message } });
+    $("gitlog").textContent = result.log || "完了";
+    $("commitMessage").value = "";
+    await refreshGit();
+  } catch (error) {
+    $("gitlog").textContent = `失敗:\n${error.message}`;
+    $("publishBtn").disabled = false;
+  }
+}
+
+// ---- イベント ----
+$("new").addEventListener("click", newPost);
+$("save").addEventListener("click", save);
+$("publishBtn").addEventListener("click", publish);
+$("refreshGit").addEventListener("click", refreshGit);
+$("updatedToday").addEventListener("click", () => { $("updated").value = state.meta.today; setDirty(true); });
+$("updatedClear").addEventListener("click", () => { $("updated").value = ""; setDirty(true); });
+$("togglePreview").addEventListener("click", () => {
+  const split = $("editor").classList.toggle("split");
+  if (split) reloadPreview();
+});
+$("reloadPreview").addEventListener("click", () => { $("editor").classList.add("split"); reloadPreview(); });
+$("form").addEventListener("input", () => setDirty(true));
+$("body").addEventListener("input", () => setDirty(true));
+$("slug").addEventListener("input", () => { $("slug").value = $("slug").value.toLowerCase().replace(/[^a-z0-9-]/g, "-"); });
+document.addEventListener("keydown", (event) => {
+  if ((event.metaKey || event.ctrlKey) && event.key === "s") { event.preventDefault(); if (!$("main").classList.contains("hidden")) save(); }
+});
+window.addEventListener("beforeunload", (event) => { if (state.dirty) event.preventDefault(); });
+
+// ---- 起動 ----
+(async () => {
+  state.meta = await api("/api/meta");
+  renderTaxonomy();
+  await loadPosts();
+  await refreshGit();
+})().catch((error) => { document.body.textContent = `起動に失敗しました: ${error.message}`; });
+</script>
+</body>
+</html>
