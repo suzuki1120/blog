@@ -1,6 +1,6 @@
 // 記事（content/posts/*.mdx）の読み書きと検証。
 // frontmatter は content-collections.ts のスキーマに合わせた項目だけを扱う。
-import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, existsSync, unlinkSync } from "node:fs";
 import { join } from "node:path";
 
 export const postsDir = new URL("../../content/posts/", import.meta.url).pathname;
@@ -170,4 +170,8 @@ export function readPost(slug) {
 
 export function writePost(slug, data) {
   writeFileSync(fileOf(slug), serializePost(data), "utf8");
+}
+
+export function deletePost(slug) {
+  unlinkSync(fileOf(slug));
 }

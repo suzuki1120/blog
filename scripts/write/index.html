@@ -59,9 +59,21 @@
   .inline { display: flex; gap: 6px; align-items: center; }
   .inline input { flex: 1; }
   .inline button { padding: 4px 8px; font-size: 12px; white-space: nowrap; }
+  button.danger:hover { border-color: var(--red); color: var(--red); }
   .editor { flex: 1; display: grid; grid-template-columns: 1fr; min-height: 0; }
   .editor.split { grid-template-columns: 1fr 1fr; }
-  #body { height: 100%; resize: none; border: 0; border-radius: 0; font: 14px/1.7 var(--font-mono); padding: 14px 16px; }
+  .write { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+  #body { flex: 1; resize: none; border: 0; border-radius: 0; font: 14px/1.7 var(--font-mono); padding: 14px 16px; }
+  #body:focus { outline: 0; }
+
+  /* 本文の書式ボタン */
+  .mdbar { display: flex; flex-wrap: wrap; gap: 4px 10px; padding: 6px 12px; border-bottom: 1px solid var(--line); background: var(--panel); }
+  .mdbar .group { display: flex; gap: 2px; align-items: center; }
+  .mdbar .group + .group { border-left: 1px solid var(--line); padding-left: 10px; }
+  .mdbar .label { font-size: 11px; color: var(--ink-2); margin-right: 4px; }
+  .mdbar button { padding: 2px 8px; font-size: 12px; line-height: 1.6; min-width: 28px; }
+  .mdbar button b, .mdbar button i { pointer-events: none; }
+  .mdbar .component { border-color: var(--neon-dim); }
   #preview { border: 0; border-left: 1px solid var(--line); width: 100%; height: 100%; background: #000; display: none; }
   .editor.split #preview { display: block; }
   .hint { font-size: 11px; color: var(--ink-2); }
@@ -93,6 +105,7 @@
     <span id="status"></span>
     <button id="togglePreview">プレビュー</button>
     <button id="reloadPreview" title="プレビューを再読み込み">↻</button>
+    <button id="delete" class="danger" title="この記事のファイルを削除します">削除</button>
     <button id="save" class="primary">保存 <span class="hint">⌘S</span></button>
   </div>
   <form class="meta" id="form" onsubmit="return false">
@@ -108,7 +121,38 @@
     <div class="c6"><label>OG 画像のパス（任意。未指定ならタイトル入りの画像を自動生成）</label><input type="text" id="ogImage" placeholder="/images/xxx.png"></div>
   </form>
   <div class="editor" id="editor">
-    <textarea id="body" placeholder="本文を Markdown（MDX）で書きます。" spellcheck="false"></textarea>
+    <div class="write">
+      <div class="mdbar" id="mdbar">
+        <div class="group">
+          <button type="button" data-snippet="h2" title="見出し（##）。目次に出ます">H2</button>
+          <button type="button" data-snippet="h3" title="小見出し（###）。目次に出ます">H3</button>
+        </div>
+        <div class="group">
+          <button type="button" data-snippet="bold" title="太字（⌘B）"><b>B</b></button>
+          <button type="button" data-snippet="italic" title="斜体（⌘I）"><i>I</i></button>
+          <button type="button" data-snippet="code" title="インラインコード（`）">`code`</button>
+          <button type="button" data-snippet="link" title="リンク（⌘K）">リンク</button>
+        </div>
+        <div class="group">
+          <button type="button" data-snippet="ul" title="箇条書き（- ）">・リスト</button>
+          <button type="button" data-snippet="ol" title="番号付きリスト（1. ）">1. リスト</button>
+          <button type="button" data-snippet="quote" title="引用（> ）">引用</button>
+          <button type="button" data-snippet="codeblock" title="コードブロック。言語名の後ろに title=&quot;ファイル名&quot; も書けます">コード</button>
+          <button type="button" data-snippet="table" title="表">表</button>
+          <button type="button" data-snippet="hr" title="区切り線（---）">―</button>
+        </div>
+        <div class="group">
+          <span class="label">部品</span>
+          <button type="button" class="component" data-snippet="info" title="&lt;MessageBox&gt; 情報">情報</button>
+          <button type="button" class="component" data-snippet="warning" title="&lt;MessageBox type=&quot;warning&quot;&gt; 警告">警告</button>
+          <button type="button" class="component" data-snippet="error" title="&lt;MessageBox type=&quot;error&quot;&gt; エラー">エラー</button>
+          <button type="button" class="component" data-snippet="linkcard" title="&lt;LinkCard&gt; ショートカット風のリンクカード">リンクカード</button>
+          <button type="button" class="component" data-snippet="image" title="&lt;ImageViewer&gt; 画像ビューア。width / height は画像の実寸">画像</button>
+          <button type="button" class="component" data-snippet="download" title="&lt;Download&gt; ダウンロード欄。ファイルは public/files/ に置きます">ダウンロード</button>
+        </div>
+      </div>
+      <textarea id="body" placeholder="本文を Markdown（MDX）で書きます。" spellcheck="false"></textarea>
+    </div>
     <iframe id="preview" title="プレビュー"></iframe>
   </div>
 </main>
@@ -184,6 +228,7 @@ function fillForm(post) {
   $("ogImage").value = fm.ogImage ?? "";
   $("body").value = post.body ?? "";
   $("heading").textContent = state.isNew ? "新しい記事" : `content/posts/${post.slug}.mdx`;
+  $("delete").hidden = state.isNew;
   $("main").classList.remove("hidden");
   setDirty(false);
   setStatus("");
@@ -248,6 +293,7 @@ async function save() {
     state.isNew = false;
     state.dirty = false;
     $("slug").disabled = true;
+    $("delete").hidden = false;
     $("heading").textContent = `content/posts/${saved.slug}.mdx`;
     setStatus(`保存しました（${new Date().toLocaleTimeString("ja-JP")}）`, "ok");
     await Promise.all([loadPosts(), refreshGit()]);
@@ -257,6 +303,118 @@ async function save() {
   } catch (error) {
     setStatus(error.message, "err");
   }
+}
+
+async function deletePost() {
+  if (state.isNew || !state.current) return;
+  const { slug } = state.current;
+  const title = state.current.frontmatter?.title || slug;
+  const path = `content/posts/${slug}.mdx`;
+  // 一度もコミットしていない記事は git からも戻せない
+  const uncommitted = state.meta.git.changes.some((c) => c.path === path && /^(\?\?|A)/.test(c.status));
+  const note = uncommitted
+    ? "この記事はまだ一度もコミットしていないため、削除すると元に戻せません。"
+    : "本番から消えるのは「コミットして push」を押したときです。それまでは git restore で戻せます。";
+  if (!confirm(`「${title}」（${path}）を削除しますか？\n\n${note}`)) return;
+  try {
+    await api(`/api/posts/${encodeURIComponent(slug)}`, { method: "DELETE" });
+    state.current = null;
+    state.dirty = false;
+    $("main").classList.add("hidden");
+    $("editor").classList.remove("split");
+    await Promise.all([loadPosts(), refreshGit()]);
+    $("gitlog").textContent = `${path} を削除しました。`;
+    if (!uncommitted) $("commitMessage").value = `記事を削除: ${title}`;
+    else if ($("commitMessage").value === `記事を追加: ${title}`) $("commitMessage").value = "";
+  } catch (error) {
+    setStatus(error.message, "err");
+  }
+}
+
+// ---- 本文の書式ボタン ----
+// 「⟦…⟧」で囲んだ部分は、挿入後に選択状態にする（そのまま打ち替えられるように）
+const isUrl = (text) => /^(https?:\/\/|\/)\S*$/.test(text);
+const indent = (text) => text.split("\n").map((line) => (line ? `  ${line}` : line)).join("\n");
+
+// 選択中の文字列を囲む
+const inlineSnippets = {
+  bold: (sel) => `**⟦${sel || "太字"}⟧**`,
+  italic: (sel) => `*⟦${sel || "斜体"}⟧*`,
+  code: (sel) => `\`⟦${sel || "code"}⟧\``,
+  link: (sel) => (isUrl(sel) ? `[⟦リンク文字⟧](${sel})` : sel ? `[${sel}](⟦https://⟧)` : "[⟦リンク文字⟧](https://)"),
+};
+
+// カーソルのある行（選択範囲を含む行すべて）の先頭に記号を付ける
+const lineSnippets = {
+  h2: { mark: (line) => `## ${line.replace(/^#+\s*/, "")}`, placeholder: "見出し" },
+  h3: { mark: (line) => `### ${line.replace(/^#+\s*/, "")}`, placeholder: "小見出し" },
+  ul: { mark: (line) => `- ${line}`, placeholder: "項目" },
+  ol: { mark: (line, n) => `${n}. ${line}`, placeholder: "項目" },
+  quote: { mark: (line) => `> ${line}`, placeholder: "引用文" },
+};
+
+// 前後に空行を入れ、独立した段落として挿入する
+const blockSnippets = {
+  codeblock: (sel) => `\`\`\`⟦ts⟧\n${sel}\n\`\`\``,
+  table: () => "| ⟦見出し⟧ | 見出し |\n| --- | --- |\n| 内容 | 内容 |",
+  hr: () => "---",
+  info: (sel) => `<MessageBox>\n${indent(`⟦${sel || "補足をここに書きます。"}⟧`)}\n</MessageBox>`,
+  warning: (sel) => `<MessageBox type="warning">\n${indent(`⟦${sel || "注意書きをここに書きます。"}⟧`)}\n</MessageBox>`,
+  error: (sel) => `<MessageBox type="error">\n${indent(`⟦${sel || "やってはいけない操作をここに書きます。"}⟧`)}\n</MessageBox>`,
+  linkcard: (sel) =>
+    isUrl(sel)
+      ? `<LinkCard\n  href="${sel}"\n  title="⟦ページのタイトル⟧"\n  description="ページの説明"\n/>`
+      : `<LinkCard\n  href="⟦https://⟧"\n  title="${sel || "ページのタイトル"}"\n  description="ページの説明"\n/>`,
+  image: () => '<ImageViewer\n  src="⟦/images/xxx.png⟧"\n  alt="画像の説明"\n  width={640}\n  height={400}\n  caption="キャプション"\n/>',
+  download: () => '<Download\n  href="⟦/files/xxx.zip⟧"\n  size="1.2 MB"\n  description="ファイルの説明"\n/>',
+};
+
+function replaceRange(start, end, marked) {
+  const body = $("body");
+  const open = marked.indexOf("⟦");
+  const close = marked.indexOf("⟧") - 1;
+  const text = marked.replace("⟦", "").replace("⟧", "");
+  body.focus();
+  body.setSelectionRange(start, end);
+  // execCommand で挿入すると ⌘Z で元に戻せる。使えないブラウザでは直接書き換える
+  if (!document.execCommand("insertText", false, text)) {
+    body.setRangeText(text, start, end, "end");
+    body.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+  if (open >= 0) body.setSelectionRange(start + open, start + close);
+}
+
+/** 前後に空行が無ければ足して、独立した段落として挿入する */
+function replaceAsBlock(value, start, end, marked) {
+  const before = value.slice(0, start);
+  const after = value.slice(end);
+  const lead = before === "" || before.endsWith("\n\n") ? "" : before.endsWith("\n") ? "\n" : "\n\n";
+  const trail = after === "" ? "\n" : after.startsWith("\n\n") ? "" : after.startsWith("\n") ? "\n" : "\n\n";
+  replaceRange(start, end, lead + marked + trail);
+}
+
+function applySnippet(name) {
+  const { value, selectionStart: start, selectionEnd: end } = $("body");
+  const sel = value.slice(start, end);
+
+  if (inlineSnippets[name]) return replaceRange(start, end, inlineSnippets[name](sel));
+
+  if (lineSnippets[name]) {
+    const { mark, placeholder } = lineSnippets[name];
+    const lineStart = value.lastIndexOf("\n", start - 1) + 1;
+    // 行末の改行まで選択していたら、次の行は含めない
+    const lastEnd = end > start && value[end - 1] === "\n" ? end - 1 : end;
+    const lineEnd = value.indexOf("\n", lastEnd) < 0 ? value.length : value.indexOf("\n", lastEnd);
+    const lines = value.slice(lineStart, lineEnd).split("\n");
+    // 空行で押したときは、見本の文字を入れた新しい段落にする
+    if (lines.every((line) => line.trim() === "")) {
+      return replaceAsBlock(value, lineStart, lineEnd, mark(`⟦${placeholder}⟧`, 1));
+    }
+    let n = 0;
+    return replaceRange(lineStart, lineEnd, lines.map((line) => (line.trim() === "" ? line : mark(line, ++n))).join("\n"));
+  }
+
+  if (blockSnippets[name]) return replaceAsBlock(value, start, end, blockSnippets[name](sel.replace(/\n+$/, "")));
 }
 
 // ---- プレビュー（npm run dev の画面をそのまま表示） ----
@@ -317,6 +475,18 @@ async function publish() {
 // ---- イベント ----
 $("new").addEventListener("click", newPost);
 $("save").addEventListener("click", save);
+$("delete").addEventListener("click", deletePost);
+// ボタンを押しても本文の選択範囲（フォーカス）を失わないようにする
+$("mdbar").addEventListener("mousedown", (event) => event.preventDefault());
+$("mdbar").addEventListener("click", (event) => {
+  const name = event.target.closest("button")?.dataset.snippet;
+  if (name) applySnippet(name);
+});
+$("body").addEventListener("keydown", (event) => {
+  if (!(event.metaKey || event.ctrlKey) || event.shiftKey || event.altKey) return;
+  const name = { b: "bold", i: "italic", k: "link" }[event.key.toLowerCase()];
+  if (name) { event.preventDefault(); applySnippet(name); }
+});
 $("publishBtn").addEventListener("click", publish);
 $("refreshGit").addEventListener("click", refreshGit);
 $("updatedToday").addEventListener("click", () => { $("updated").value = state.meta.today; setDirty(true); });

@@ -1,10 +1,11 @@
 // 記事をブラウザから書くためのローカル専用サーバー（npm run write）。
-// 127.0.0.1 にだけ待ち受け、content/posts/*.mdx の読み書きと git の commit / push を行う。
+// 127.0.0.1 にだけ待ち受け、content/posts/*.mdx の読み書き・削除と git の commit / push を行う。
 import { createServer } from "node:http";
 import { readFileSync } from "node:fs";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import {
+  deletePost,
   isValidSlug,
   listPosts,
   loadTaxonomy,
@@ -155,6 +156,11 @@ async function route(req, url) {
     }
     if (method === "PUT") {
       return savePost(slug, await readJson(req), { create: false });
+    }
+    if (method === "DELETE") {
+      if (!isValidSlug(slug) || !postExists(slug)) throw new HttpError(404, `「${slug}」は見つかりません。`);
+      deletePost(slug);
+      return { slug, deleted: true };
     }
   }
   if (method === "GET" && path === "/api/git") {
